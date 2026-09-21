@@ -4,7 +4,7 @@ try{
  db()->exec(file_get_contents(__DIR__.'/schema.sql'));
  $email='oritswill@gmail.com';
  $q=db()->prepare('SELECT id FROM users WHERE email=?');$q->execute([$email]);
- if($q->fetch()){echo '<h2>Nigerian Affairs is already installed.</h2>';exit;}
+ if($q->fetch()){echo '<h2>Nigerian Affairs database is up to date.</h2>';exit;}
  $password=bin2hex(random_bytes(8));
  $s=db()->prepare('INSERT INTO users(email,username,password_hash,given_name,family_name,roles,verified) VALUES(?,?,?,?,?,?,1)');
  $s->execute([$email,'oritswill',password_hash($password,PASSWORD_DEFAULT),'Wilfred','Olley','Site Administrator,Journal Manager,Editor,Author,Reader']);
