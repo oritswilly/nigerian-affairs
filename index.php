@@ -12,10 +12,11 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
    if(!filter_var($email,FILTER_VALIDATE_EMAIL)||strlen($username)<3||strlen($pw)<8)throw new RuntimeException('Enter a valid email, username and password of at least 8 characters.');
    $s=db()->prepare('INSERT INTO users(email,username,password_hash,given_name,family_name,affiliation,country,orcid,reviewing_interests,roles,verified) VALUES(?,?,?,?,?,?,?,?,?,?,1)');
    $s->execute([$email,$username,password_hash($pw,PASSWORD_DEFAULT),trim($_POST['given_name']??''),trim($_POST['family_name']??''),trim($_POST['affiliation']??''),trim($_POST['country']??''),trim($_POST['orcid']??''),trim($_POST['reviewing_interests']??''),'Author,Reader']);
-   $msg='Registration successful. You can now log in.';$page='login';
+   $uid=(int)db()->lastInsertId();db()->prepare('UPDATE users SET verified=0 WHERE id=?')->execute([$uid]);$token=bin2hex(random_bytes(32));$hash=hash('sha256',$token);db()->prepare('INSERT INTO email_verifications(user_id,token_hash,expires_at) VALUES(?,?,DATE_ADD(NOW(),INTERVAL 24 HOUR))')->execute([$uid,$hash]);$url=rtrim(getenv('APP_URL')?:'', '/').'/?page=verify-email&token='.urlencode($token);send_mail($email,'Verify your Nigerian Affairs account','<p>Welcome to Nigerian Affairs.</p><p><a href="'.e($url).'">Verify your email address</a></p><p>This link expires in 24 hours.</p>');
+   $msg='Registration successful. Check your email to verify your account before signing in.';$page='login';
   }elseif($action==='login'){
    $id=trim($_POST['identity']??'');$s=db()->prepare('SELECT * FROM users WHERE email=? OR username=? LIMIT 1');$s->execute([strtolower($id),$id]);$x=$s->fetch();
-   if(!$x||!password_verify($_POST['password']??'',$x['password_hash']))throw new RuntimeException('Invalid username/email or password.');
+   if(!$x||!password_verify($_POST['password']??'',$x['password_hash']))throw new RuntimeException('Invalid username/email or password.');if(!(int)$x['verified'])throw new RuntimeException('Please verify your email address before signing in.');
    session_regenerate_id(true);$_SESSION['uid']=$x['id'];header('Location: ?page=dashboard');exit;
   }elseif($action==='request-reset'){
    $email=strtolower(trim($_POST['email']??''));$q=db()->prepare('SELECT id,email,given_name FROM users WHERE email=? LIMIT 1');$q->execute([$email]);$account=$q->fetch();
@@ -30,6 +31,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   }
  }catch(Throwable $ex){$msg=$ex->getMessage();}
 }
+if($page==='verify-email'&&!empty($_GET['token'])){$hash=hash('sha256',$_GET['token']);$q=db()->prepare('SELECT * FROM email_verifications WHERE token_hash=? AND used_at IS NULL AND expires_at>NOW() LIMIT 1');$q->execute([$hash]);$v=$q->fetch();if($v){db()->prepare('UPDATE users SET verified=1 WHERE id=?')->execute([$v['user_id']]);db()->prepare('UPDATE email_verifications SET used_at=NOW() WHERE id=?')->execute([$v['id']]);$msg='Email verified successfully. You can now log in.';$page='login';}else{$msg='This verification link is invalid or has expired.';}}
 $u=current_user();
 ?><!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=e(ucfirst($page))?> | Nigerian Affairs</title><link rel="stylesheet" href="assets/style.css"></head><body>
