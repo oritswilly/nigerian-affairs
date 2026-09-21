@@ -38,6 +38,27 @@ $u=current_user();
 <main class="wide content"><h2>Dashboard</h2><p><?=e($me['given_name'].' '.$me['family_name'])?> · <?=e($me['roles'])?></p><a class="button" href="?page=submissions">New Submission</a><?php if(has_role($me,'Editor')||has_role($me,'Journal Manager')||has_role($me,'Site Administrator')): ?><a class="button" href="?page=editor">Editorial Workflow</a><?php endif; ?><h3>My Submissions</h3><?php if(!$subs): ?><p>No submissions.</p><?php endif; ?><?php foreach($subs as $s): ?><div class="paper"><b><?=e($s['title'])?></b><br><?=e($s['stage'])?> · <?=e($s['status'])?></div><?php endforeach; ?></main>
 <?php elseif($page==='submissions'): require_login(); ?>
 <main class="wide content"><h2>New Submission</h2><div class="steps">1. Start　2. Upload Submission　3. Enter Metadata　4. Confirmation　5. Next Steps</div><form method="post"><input type="hidden" name="csrf" value="<?=csrf()?>"><input type="hidden" name="action" value="submit"><label>Manuscript title</label><input name="title" required><label>Authors</label><input name="authors" required><label>Abstract</label><textarea name="abstract" required></textarea><label>Keywords</label><input name="keywords" required><label>Section</label><select name="section"><option>Research Article</option><option>Review Article</option><option>Commentary</option></select><label>Language</label><select name="language"><option>English</option></select><label>References</label><textarea name="references"></textarea><button>Save and Continue</button></form></main>
+<?php elseif($page==='editorial'): ?>
+<main class="wide content"><h2>Editorial Team</h2>
+<h3>EDITOR-IN-CHIEF</h3><p><strong>Dr. Olukayode Faleye</strong><br>Associate Professor, Edo State University, Iyamho</p>
+<h3>CONSULTING EDITOR</h3><p><strong>Professor G. A. Vaaseh</strong></p>
+<h3>EDITOR</h3><p><strong>Prof. Solomon Awuzie</strong><br>Edo State University, Iyamho</p>
+<h3>MANAGING EDITOR</h3><p><strong>Matthew Alugbin, PhD</strong></p>
+<h3>EDITORIAL ADVISORY BOARD</h3>
+<p>Professor A. M. Okhakhu <span>(University of Benin)</span></p>
+<p>Professor Andrew A. Ate <span>(Edo State University Iyamho)</span></p>
+<p>Professor Afutendem Lucas Nkwetta <span>(University of Dschang, Cameroon)</span></p>
+<p>Professor Andrew Ogah Ijwo <span>(Benue State University, Makurdi)</span></p>
+<p>Professor Ayo Osisanwo <span>(University of Ibadan)</span></p>
+<p>Professor Christoph Schmidt <span>(University of Applied Sciences, Bonn, Germany)</span></p>
+<p>Professor Isidore Diala <span>(Imo State University)</span></p>
+<p>Professor J. A. Sambe <span>(University of Veritas)</span></p>
+<p>Professor P. F. Adebayo <span>(University of Ilorin)</span></p>
+<p>Professor P. O. Alokan <span>(Joseph Ayo Babalola University)</span></p>
+<p>Prof. Blessed Frederick Ngonso <span>(Edo State University, Iyamho)</span></p>
+<p>Dr. Wilfred O. Olley <span>(Associate Professor, Edo State University, Iyamho)</span></p>
+<p>Rev. Fr. Dr. Peter E. Egielewa <span>(Associate Professor, Edo State University, Iyamho)</span></p>
+</main>
 <?php elseif($page==='home'): ?>
 <div class="hero wide"></div><main class="wide layout"><section><h2>Announcements</h2><div class="announce"><article><a>Call for papers: Nigerian Affairs</a><small>2026-09-18</small><p>Nigerian Affairs welcomes original scholarship across the Arts, Humanities and Social Sciences.</p></article><article><a>Volume 2, Number 1 (2026) published online</a><small>2026-09-18</small><p>The current issue of Nigerian Affairs is now available.</p></article></div><hr><h2>Current issue</h2><p><b>Vol. 2 No. 1 (2026): Nigerian Affairs</b></p><p>Published: 2026-09-18</p></section><aside><h3>Information</h3><a>For Readers</a><a>For Authors</a><a>For Librarians</a><hr><a class="button" href="?page=submissions">Make a Submission</a><h3>Journal Details</h3><p>Frequency<br><b>Biannual</b></p><p>Review<br><b>Double-blind</b></p></aside></main>
 <?php else: ?><main class="wide content"><h2><?=e(ucwords(str_replace('-',' ',$page)))?></h2><p>Nigerian Affairs is an interdisciplinary academic journal published by the Faculty of Arts and Communication, Edo State University Iyamho, Nigeria.</p></main><?php endif; ?>
