@@ -18,7 +18,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   }elseif($action==='login'){
    $id=trim($_POST['identity']??'');$s=db()->prepare('SELECT * FROM users WHERE email=? OR username=? LIMIT 1');$s->execute([strtolower($id),$id]);$x=$s->fetch();
    if(!$x||!password_verify($_POST['password']??'',$x['password_hash']))throw new RuntimeException('Invalid username/email or password.');if(!(int)$x['verified'])throw new RuntimeException('Please verify your email address before signing in.');
-   session_regenerate_id(true);$_SESSION['uid']=$x['id'];header('Location: ?page=dashboard');exit;
+   session_regenerate_id(true);$_SESSION['uid']=$x['id'];$adminRoles=array_map('trim',explode(',',$x['roles']??''));$isAdmin=(bool)array_intersect(['Editor','Journal Manager','Site Administrator'],$adminRoles);header('Location: ?page='.($isAdmin?'admin-overview':'dashboard'));exit;
   }elseif($action==='request-reset'){
    $email=strtolower(trim($_POST['email']??''));$q=db()->prepare('SELECT id,email,given_name FROM users WHERE email=? LIMIT 1');$q->execute([$email]);$account=$q->fetch();
    if($account){$token=bin2hex(random_bytes(32));$hash=hash('sha256',$token);db()->prepare('UPDATE password_resets SET used_at=NOW() WHERE user_id=? AND used_at IS NULL')->execute([$account['id']]);db()->prepare('INSERT INTO password_resets(user_id,token_hash,expires_at) VALUES(?,?,DATE_ADD(NOW(),INTERVAL 15 MINUTE))')->execute([$account['id'],$hash]);$url=rtrim(getenv('APP_URL')?:'', '/').'/?page=reset-password&token='.urlencode($token);send_mail($account['email'],'Nigerian Affairs password reset','<p>Hello '.e($account['given_name']).',</p><p>Use the link below to set a new Nigerian Affairs password. The link expires in 15 minutes.</p><p><a href="'.e($url).'">Reset password</a></p><p>If you did not request this, ignore this email.</p>');}
@@ -87,6 +87,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 }
 if($page==='verify-email'&&!empty($_GET['token'])){$hash=hash('sha256',$_GET['token']);$q=db()->prepare('SELECT * FROM email_verifications WHERE token_hash=? AND used_at IS NULL AND expires_at>NOW() LIMIT 1');$q->execute([$hash]);$v=$q->fetch();if($v){db()->prepare('UPDATE users SET verified=1 WHERE id=?')->execute([$v['user_id']]);db()->prepare('UPDATE email_verifications SET used_at=NOW() WHERE id=?')->execute([$v['id']]);$msg='Email verified successfully. You can now log in.';$page='login';}else{$msg='This verification link is invalid or has expired.';}}
 $u=current_user();
+if($page==='dashboard'&&$u&&(has_role($u,'Editor')||has_role($u,'Journal Manager')||has_role($u,'Site Administrator'))){header('Location: ?page=admin-overview');exit;}
 $adminChromePages=['admin-overview','editor','users-roles','journal-settings','audit-report','issue-management','announcement-management','galley-management'];
 $adminChrome=in_array($page,$adminChromePages,true);
 $protectedPages=['dashboard','admin-overview','editor','submissions','submission-file','revision','review','review-invitation','users-roles','journal-settings','audit-report','issue-management','announcement-management','galley-management'];
