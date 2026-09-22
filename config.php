@@ -12,6 +12,8 @@ function db(): PDO {
  if(!$name||!$user)throw new RuntimeException('Database connection is not configured.');
  $dsn="mysql:host={$host};port={$port};dbname={$name};charset=utf8mb4";
  $pdo=new PDO($dsn,$user,$pass,[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC]);
+ $pdo->exec("CREATE TABLE IF NOT EXISTS email_log (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, recipient VARCHAR(190) NOT NULL, subject VARCHAR(255) NOT NULL, status VARCHAR(30) NOT NULL, detail VARCHAR(255) NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+ $pdo->exec("CREATE TABLE IF NOT EXISTS apc_payments (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, submission_id BIGINT UNSIGNED NOT NULL, payment_type VARCHAR(50) NOT NULL, amount DECIMAL(12,2) NULL, reference_no VARCHAR(190) NULL, status VARCHAR(40) NOT NULL DEFAULT 'Pending verification', evidence_note TEXT NULL, verified_by BIGINT UNSIGNED NULL, verified_at DATETIME NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX(submission_id))");
  return $pdo;
 }
 function e(string $v): string{return htmlspecialchars($v,ENT_QUOTES,'UTF-8');}
@@ -28,10 +30,11 @@ function check_csrf(): void {if(!hash_equals($_SESSION['csrf']??'',$_POST['csrf'
 
 function send_mail(string $to,string $subject,string $html): bool {
  $key=getenv('RESEND_API_KEY') ?: '';
- if($key==='')return false;
+ if($key===''){db()->prepare('INSERT INTO email_log(recipient,subject,status,detail) VALUES(?,?,?,?)')->execute([$to,$subject,'Not configured','RESEND_API_KEY is not configured']);return false;}
  $payload=json_encode(['from'=>getenv('MAIL_FROM') ?: 'Nigerian Affairs <no-reply@nigeriaaffairs.com>','to'=>[$to],'subject'=>$subject,'html'=>$html]);
  $ch=curl_init('https://api.resend.com/emails');
  curl_setopt($ch,CURLOPT_POST,true);curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);curl_setopt($ch,CURLOPT_HTTPHEADER,['Authorization: Bearer '.$key,'Content-Type: application/json']);curl_setopt($ch,CURLOPT_POSTFIELDS,$payload);curl_setopt($ch,CURLOPT_TIMEOUT,15);
- curl_exec($ch);$code=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);curl_close($ch);
- return $code>=200&&$code<300;
+ $result=curl_exec($ch);$code=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);curl_close($ch);$ok=$code>=200&&$code<300;
+ db()->prepare('INSERT INTO email_log(recipient,subject,status,detail) VALUES(?,?,?,?)')->execute([$to,$subject,$ok?'Sent':'Failed',substr((string)$result,0,250)]);
+ return $ok;
 }
