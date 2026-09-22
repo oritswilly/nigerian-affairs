@@ -87,6 +87,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 }
 if($page==='verify-email'&&!empty($_GET['token'])){$hash=hash('sha256',$_GET['token']);$q=db()->prepare('SELECT * FROM email_verifications WHERE token_hash=? AND used_at IS NULL AND expires_at>NOW() LIMIT 1');$q->execute([$hash]);$v=$q->fetch();if($v){db()->prepare('UPDATE users SET verified=1 WHERE id=?')->execute([$v['user_id']]);db()->prepare('UPDATE email_verifications SET used_at=NOW() WHERE id=?')->execute([$v['id']]);$msg='Email verified successfully. You can now log in.';$page='login';}else{$msg='This verification link is invalid or has expired.';}}
 $u=current_user();
+$protectedPages=['dashboard','admin-overview','editor','submissions','submission-file','revision','review','review-invitation','users-roles','journal-settings','audit-report','issue-management','announcement-management','galley-management'];
+if(in_array($page,$protectedPages,true)&&!$u){header('Location: ?page=login');exit;}
 ?><!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=e(ucfirst($page))?> | Nigerian Affairs</title><link rel="stylesheet" href="assets/style.css"></head><body>
 <div class="utility"><div class="wide"><span>English</span><span><?php if($u): ?><a href="?page=dashboard">Dashboard</a><?php if(has_role($u,'Journal Manager')||has_role($u,'Site Administrator')): ?> · <a href="?page=admin-overview">Administration</a><?php endif; ?> · <a href="?page=logout">Logout</a><?php else: ?><a href="?page=register">Register</a> · <a href="?page=login">Login</a><?php endif; ?></span></div></div>
