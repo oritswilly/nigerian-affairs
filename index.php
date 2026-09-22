@@ -97,6 +97,7 @@ $adminChromePages=['admin-overview','editor','editor-submissions','editor-workfl
 $adminChrome=in_array($page,$adminChromePages,true)||($page==='submissions'&&$u&&(has_role($u,'Editor')||has_role($u,'Journal Manager')||has_role($u,'Site Administrator')));
 $protectedPages=['dashboard','admin-overview','editor','editor-submissions','editor-workflow','submissions','submission-file','revision','review','review-invitation','users-roles','journal-settings','audit-report','issue-management','announcement-management','galley-management','review-assignments','publication','plugins','production-controls','email-centre','apc-payments'];
 if(in_array($page,$protectedPages,true)&&!$u){header('Location: ?page=login');exit;}
+if($adminChrome){ob_start(function(string $html) use($page): string{return preg_replace('#<aside class="ojs35-side">.*?</aside>#s',admin_sidebar($page),$html)??$html;});}
 ?><!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=e(ucfirst($page))?> | Nigerian Affairs</title><link rel="stylesheet" href="assets/style.css"></head><body>
 <?php if(!$adminChrome): ?>
