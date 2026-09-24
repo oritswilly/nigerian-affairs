@@ -302,3 +302,59 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
  .article-meta-panel-ojs{border-left:0;border-top:1px solid #d8dfe2}
  .article-meta-block-ojs{padding:15px 18px}
 }
+
+/* OJS 3.5 citation-style selector */
+.citation-style-current-ojs{margin:0 0 5px;font-size:8.8px;line-height:1.4;color:#4f5e66}
+.citation-style-current-ojs strong{font-weight:600}
+.citation-more-ojs{margin-top:10px}
+.citation-more-ojs summary{
+  list-style:none!important;
+  cursor:pointer!important;
+  background:#d7d7d7!important;
+  color:#626b71!important;
+  padding:8px 12px!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  font-weight:400!important;
+  line-height:1.15!important;
+  border-radius:3px!important;
+}
+.citation-more-ojs summary::-webkit-details-marker{display:none!important}
+.citation-more-ojs summary:after{content:"▾";float:right;font-size:9px;line-height:1.2}
+.citation-more-ojs[open] summary:after{content:"▴"}
+.citation-style-menu-ojs{padding:9px 10px 3px!important}
+.citation-style-menu-ojs>a:not(.citation-download-link-ojs){
+  display:block!important;
+  margin:0!important;
+  padding:7px 0!important;
+  color:#0073a8!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  line-height:1.25!important;
+  text-decoration:none!important;
+}
+.citation-style-menu-ojs>a:not(.citation-download-link-ojs):hover{text-decoration:underline!important}
+.citation-style-menu-ojs h4{
+  margin:18px 0 8px!important;
+  padding:0!important;
+  color:#66737a!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:12px!important;
+  line-height:1.25!important;
+  font-weight:400!important;
+}
+.citation-download-link-ojs{
+  display:grid!important;
+  grid-template-columns:20px 1fr!important;
+  align-items:start!important;
+  gap:5px!important;
+  margin:0!important;
+  padding:7px 0!important;
+  color:#0073a8!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:10.5px!important;
+  line-height:1.35!important;
+  text-decoration:none!important;
+}
+.citation-download-link-ojs span{font-size:13px;line-height:1;color:#0073a8}
+.citation-download-link-ojs:hover{text-decoration:underline!important}
