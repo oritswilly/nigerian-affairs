@@ -7,7 +7,7 @@
 .ojs35{--nav:#263746;--nav2:#1f2d38;--blue:#006798;--line:#d5dadd;--bg:#f5f6f7;display:flex;min-height:100vh;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:#333}.ojs35 *{box-sizing:border-box}.ojs35-side{width:244px;background:var(--nav);color:#fff;flex:0 0 244px}.ojs35-logo{padding:22px 20px;border-bottom:1px solid #40515f;font-size:18px;font-weight:700}.ojs35-logo small{display:block;font-size:11px;color:#b9c5ce;margin-top:5px;font-weight:400}.ojs35-side>a,.ojs35-menu a{display:block;color:#dce5eb;text-decoration:none;padding:12px 20px;border-left:4px solid transparent;font-size:13px}.ojs35-side>a:hover,.ojs35-side>a.on,.ojs35-menu a:hover,.ojs35-menu a.on{background:var(--nav2);border-left-color:#4aa3d2;color:#fff}.ojs35-menu .sep{border-top:1px solid #40515f;margin:10px 0}.ojs35-main{flex:1;min-width:0}.ojs35-bar{min-height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:12px 28px}.ojs35-bar h2{font-size:18px;margin:0}.ojs35-content{padding:28px;max-width:1400px}.ojs35 h1{font-size:28px;font-weight:400;margin:0 0 22px;color:#333}.ojs35-tabs{background:#fff;border:1px solid var(--line);border-bottom:0}.ojs35-tabs a{display:inline-block;padding:14px 20px;text-decoration:none;color:#536675;border-bottom:3px solid transparent}.ojs35-tabs a.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:700}.ojs35-panel{background:#fff;border:1px solid var(--line);padding:20px;margin-bottom:18px}.ojs35-tools{display:flex;gap:10px;margin-bottom:16px}.ojs35-tools input,.ojs35-tools select{padding:9px;border:1px solid #bfc7cd}.ojs35 table{width:100%;border-collapse:collapse;background:#fff}.ojs35 th{font-size:12px;text-transform:uppercase;color:#647581;background:#f0f2f3;padding:12px;text-align:left;border-bottom:1px solid var(--line)}.ojs35 td{padding:14px 12px;border-bottom:1px solid #e2e6e8;vertical-align:top}.ojs35 .button,.ojs35 button{background:#0073aa;color:#fff;border:0;border-radius:3px;padding:9px 14px;text-decoration:none;cursor:pointer}.ojs35 label{display:block;margin-top:12px;font-weight:700}.ojs35 input,.ojs35 select,.ojs35 textarea{max-width:100%;padding:9px;border:1px solid #bbc4ca}.ojs35 textarea{width:100%;min-height:100px}@media(max-width:850px){.ojs35-side{width:200px;flex-basis:200px}.ojs35-content{padding:18px}}
 .ojs35-side{width:244px!important;flex-basis:244px!important}.ojs35-side>a,.ojs35-menu a{display:block!important;padding:12px 20px!important;border-left:4px solid transparent!important}.ojs35-side>a:hover,.ojs35-side>a.on,.ojs35-menu a:hover,.ojs35-menu a.on{background:#1f2d38!important;border-left-color:#4aa3d2!important}.ojs35-bar{min-height:64px!important;height:auto!important;padding:12px 28px!important}.ojs35-content{padding:28px!important}.ojs35-tabs a.on{border-bottom-color:#006798!important}
 
-.public-sidebar{border-left:1px solid #d8dfe2;padding:28px 23px}.public-sidebox{padding:0 0 18px;margin:0 0 18px;border-bottom:1px solid #d8dfe2}.public-sidebox:last-child{border-bottom:0}.public-sidebox h3{margin:0 0 10px;color:#4b5d69;font-size:16px}.public-sidebox>a:not(.button){display:block;margin:7px 0;text-decoration:none}.share-links{display:flex;flex-wrap:wrap;gap:7px}.share-links a{display:inline-block!important;margin:0!important;padding:5px 8px;border:1px solid #c7d2d8;border-radius:2px;text-decoration:none;font-size:12px;background:#fff}.keyword-cloud{display:flex;flex-wrap:wrap;gap:6px}.keyword-cloud a{display:inline-block!important;margin:0!important;padding:3px 6px;background:#f1f5f6;border-radius:2px;text-decoration:none;font-size:12px}.issue-actions{display:flex;gap:8px;flex-wrap:wrap}.button.secondary{background:#fff;color:#006798}.announcement-strip{border:1px solid #d5dadd;background:#f7f9fa;padding:16px;margin:0 0 26px}.announcement-strip small{display:block;color:#6b7982;margin-top:4px}.archive-record{padding:10px 0;border-top:1px solid #edf0f2}.archive-record h4{margin:0 0 3px}.archive-record p{margin:3px 0}.issue-record h3{margin-bottom:5px}
+.public-sidebar{border-left:1px solid #d8dfe2;padding:28px 23px}.public-sidebox{padding:0 0 18px;margin:0 0 18px;border-bottom:1px solid #d8dfe2}.public-sidebox:last-child{border-bottom:0}.public-sidebox h3{margin:0 0 10px;color:#4b5d69;font-size:16px}.public-sidebox>a:not(.button){display:block;margin:7px 0;text-decoration:none}.share-links{display:flex;flex-wrap:wrap;gap:7px}.share-links a{display:inline-block!important;margin:0!important;padding:5px 8px;border:1px solid #c7d2d8;border-radius:2px;text-decoration:none;font-size:12px;background:#fff}.issue-actions{display:flex;gap:8px;flex-wrap:wrap}.button.secondary{background:#fff;color:#006798}.announcement-strip{border:1px solid #d5dadd;background:#f7f9fa;padding:16px;margin:0 0 26px}.announcement-strip small{display:block;color:#6b7982;margin-top:4px}.archive-record{padding:10px 0;border-top:1px solid #edf0f2}.archive-record h4{margin:0 0 3px}.archive-record p{margin:3px 0}.issue-record h3{margin-bottom:5px}
 
 /* Official Nigerian Affairs cover palette, Volume 1 Issue 1 (December 2025) */
 :root{--na-green:#006633;--na-dark:#284c3b;--na-deep:#0b341d;--na-mint:#66ffcc;--na-mint-soft:#dffbef;--na-cream:#f6f4e8;--na-ink:#173326;--na-line:#b8cdbf;--na-white:#fff}
@@ -23,7 +23,7 @@ header{border-bottom-color:var(--na-line)}.brand h1{color:var(--na-green)}.brand
 .alert{background:var(--na-mint-soft);border-color:#7bd7b3;color:var(--na-deep)}.steps{background:var(--na-mint-soft);border-left:5px solid var(--na-green)}
 .paper{border-top-color:var(--na-line)}.layout,.layout aside,.public-sidebar,.public-sidebox{border-color:var(--na-line)}
 .public-sidebox h3{color:var(--na-dark)}.share-links a{border-color:var(--na-line);color:var(--na-green)}.share-links a:hover{background:var(--na-mint-soft)}
-.keyword-cloud a{background:var(--na-mint-soft);color:var(--na-deep)}.keyword-cloud a:hover{background:var(--na-mint)}
+
 .announcement-strip{border-color:var(--na-line);background:linear-gradient(90deg,var(--na-mint-soft),#fff)}
 footer{background:var(--na-deep);color:#e8f6ed;border-top:6px solid var(--na-mint)}footer a{color:var(--na-mint)}
 .ojs35{--nav:var(--na-deep);--nav2:var(--na-dark);--blue:var(--na-green);--line:var(--na-line);--bg:#f4f8f5;color:var(--na-ink)}
@@ -61,6 +61,66 @@ header{background:var(--na-green);border-bottom:0}
 .public-sidebar{font-size:12px}.public-sidebox{padding-bottom:17px;margin-bottom:17px}.public-sidebox h3{font-size:16px;color:#173326}.public-sidebox>a:not(.button){font-size:12px}
 .journal-badge{border:1px solid #ccd8d1;padding:10px;margin:0 0 17px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;background:#fff}.journal-badge strong{font-size:10px;line-height:1.2}.journal-badge span{font-size:9px;color:#718078}.journal-badge b{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:var(--na-mint);color:var(--na-deep);font-size:16px;margin-top:4px}.journal-badge small{font-size:10px;color:#68776f}.submit-button{width:100%;text-align:center;margin:0!important}
 .share-links{display:block}.share-links a{display:block!important;width:100%;border:0!important;color:#fff!important;border-radius:0!important;padding:5px 7px!important;margin:0 0 5px!important;font-size:10px}.share-links a:nth-child(1){background:#1687a7}.share-links a:nth-child(2){background:#4668a9}.share-links a:nth-child(3){background:#1478a3}.share-links a:nth-child(4){background:#39a84a}.share-links a:nth-child(5){background:#6c6c6c}
-.keyword-cloud{gap:4px}.keyword-cloud a{font-size:10px;padding:2px 5px;background:var(--na-mint-soft)}
+
 footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr 1fr;gap:28px}.footer-grid h3{font-size:13px}.footer-grid p,.footer-grid a{font-size:11px}.footer-bottom{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.18);margin-top:18px;padding-top:13px;font-size:10px}.footer-bottom a{color:#dffbef}
 @media(max-width:800px){.brand{height:78px}.brand h1{font-size:22px}.brand+nav{overflow:visible}.hero{height:150px!important}.layout{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.article-meta{display:block}.article-meta .pages{display:block;margin-top:3px}.footer-bottom{display:block}.footer-bottom span{display:block;margin:4px 0}}
+
+/* NJCR-matched keyword cloud: fixed dimensions, scale, rotation and interaction */
+.keyword-cloud{
+  position:relative!important;
+  display:block!important;
+  width:232px!important;
+  max-width:100%!important;
+  height:205px!important;
+  margin:3px auto 2px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  background:#fff!important;
+  border:0!important;
+}
+.keyword-cloud a.kw{
+  position:absolute!important;
+  left:var(--kw-x)!important;
+  top:var(--kw-y)!important;
+  display:block!important;
+  width:max-content!important;
+  max-width:150px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--kw-color)!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:var(--kw-size)!important;
+  font-weight:400!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  text-decoration:none!important;
+  transform:rotate(var(--kw-rot))!important;
+  transform-origin:left top!important;
+  opacity:.98!important;
+  transition:opacity .14s ease, filter .14s ease!important;
+  z-index:1!important;
+}
+.keyword-cloud a.kw:hover,
+.keyword-cloud a.kw:focus{
+  opacity:1!important;
+  filter:brightness(.72)!important;
+  text-decoration:underline!important;
+  outline:none!important;
+  z-index:5!important;
+}
+.keyword-empty{
+  display:block;
+  padding:20px 0;
+  font-size:11px;
+  color:#777;
+}
+@media(max-width:800px){
+  .keyword-cloud{
+    width:232px!important;
+    height:205px!important;
+    margin-left:0!important;
+  }
+}
