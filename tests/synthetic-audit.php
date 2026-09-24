@@ -46,6 +46,20 @@ try {
  must((int)$q->fetchColumn()>=1,'Wilfred Oritsesan Olley ORCID/Scopus metadata is incorrect');
  pass('wilfred_identifiers','ORCID 0000-0001-5405-765X and Scopus ID 57862966200');
 
+ $verifiedIds=[
+  'Peter Eshioke Egielewa'=>'0000-0002-3670-2835',
+  'Adebisi Kazeem Aro'=>'0009-0006-5671-7512',
+  'Olusegun Abimbola Odunlami'=>'0000-0002-6305-8678',
+  'Mojeed Oyetunji Oyedokun'=>'0009-0004-6452-285X',
+  'Olanrewaju Amos Arisoyin'=>'0009-0003-9751-1236',
+  'Wilfred Oritsesan Olley'=>'0000-0001-5405-765X'
+ ];
+ foreach($verifiedIds as $name=>$orcid){
+  $q=$pdo->prepare('SELECT COUNT(*) FROM submission_authors WHERE name=? AND orcid=?');$q->execute([$name,$orcid]);
+  must((int)$q->fetchColumn()>=1,'Verified ORCID missing for '.$name);
+ }
+ pass('verified_external_author_ids','6 verified ORCID records present; Wilfred Scopus ID retained');
+
  $q=$pdo->query("SELECT COUNT(*) FROM announcements WHERE published_at IS NOT NULL AND title IN ('Complete Nigerian Affairs digital archive is now available','Volume 1, Number 2 (2026) published online')");
  must((int)$q->fetchColumn()===2,'Current issue/archive announcements are incomplete');
  pass('issue_announcements','current issue and archive announcements present');
