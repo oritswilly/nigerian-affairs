@@ -65,62 +65,54 @@ header{background:var(--na-green);border-bottom:0}
 footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr 1fr;gap:28px}.footer-grid h3{font-size:13px}.footer-grid p,.footer-grid a{font-size:11px}.footer-bottom{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.18);margin-top:18px;padding-top:13px;font-size:10px}.footer-bottom a{color:#dffbef}
 @media(max-width:800px){.brand{height:78px}.brand h1{font-size:22px}.brand+nav{overflow:visible}.hero{height:150px!important}.layout{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.article-meta{display:block}.article-meta .pages{display:block;margin-top:3px}.footer-bottom{display:block}.footer-bottom span{display:block;margin:4px 0}}
 
-/* NJCR-matched keyword cloud: fixed dimensions, scale, rotation and interaction */
+/* NJCR-style keyword cloud: 20 equal-size words, wrapped and collision-free */
 .keyword-cloud{
   position:relative!important;
   display:block!important;
   width:232px!important;
-  max-width:100%!important;
   height:205px!important;
-  margin:3px auto 2px!important;
+  max-width:232px!important;
+  margin:4px auto 2px!important;
   padding:0!important;
   overflow:hidden!important;
   background:#fff!important;
-  border:0!important;
 }
 .keyword-cloud a.kw{
   position:absolute!important;
-  left:var(--kw-x)!important;
-  top:var(--kw-y)!important;
-  display:block!important;
-  width:max-content!important;
-  max-width:150px!important;
+  left:var(--kw-left)!important;
+  top:var(--kw-top)!important;
+  width:var(--kw-w)!important;
+  height:var(--kw-h)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
   margin:0!important;
   padding:0!important;
   border:0!important;
-  border-radius:0!important;
   background:transparent!important;
   color:var(--kw-color)!important;
   font-family:Georgia,"Times New Roman",serif!important;
-  font-size:var(--kw-size)!important;
+  font-size:14px!important;
   font-weight:400!important;
-  line-height:1!important;
-  white-space:nowrap!important;
+  line-height:1.05!important;
+  text-align:center!important;
   text-decoration:none!important;
+  white-space:normal!important;
+  overflow:visible!important;
   transform:rotate(var(--kw-rot))!important;
-  transform-origin:left top!important;
-  opacity:.98!important;
-  transition:opacity .14s ease, filter .14s ease!important;
+  transform-origin:center center!important;
+  box-sizing:border-box!important;
   z-index:1!important;
 }
+.keyword-cloud a.kw span{display:block!important;width:100%!important}
 .keyword-cloud a.kw:hover,
 .keyword-cloud a.kw:focus{
-  opacity:1!important;
-  filter:brightness(.72)!important;
   text-decoration:underline!important;
+  filter:brightness(.72)!important;
+  z-index:3!important;
   outline:none!important;
-  z-index:5!important;
 }
-.keyword-empty{
-  display:block;
-  padding:20px 0;
-  font-size:11px;
-  color:#777;
-}
+.keyword-empty{display:block;padding:20px 0;font-size:11px;color:#777}
 @media(max-width:800px){
-  .keyword-cloud{
-    width:232px!important;
-    height:205px!important;
-    margin-left:0!important;
-  }
+ .keyword-cloud{width:232px!important;height:205px!important;margin-left:0!important}
 }
