@@ -358,3 +358,181 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
 }
 .citation-download-link-ojs span{font-size:13px;line-height:1;color:#0073a8}
 .citation-download-link-ojs:hover{text-decoration:underline!important}
+
+/* OJS 3.5 public typography normalization — 14px baseline */
+:root{
+  font-family:"Noto Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif!important;
+  font-size:14px!important;
+}
+html,body{
+  font-family:"Noto Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif!important;
+  font-size:14px!important;
+  line-height:1.43!important;
+}
+body{color:#222!important}
+
+/* OJS baseline: small ~13px, body 14px, bump 16px, lead 18px, header 24px */
+.utility .wide,
+.utility select,
+.utility a{font-size:13px!important}
+
+.brand+nav a{
+  font-size:13px!important;
+  line-height:20px!important;
+  padding:9px 10px!important;
+}
+.brand h1{font-size:28px!important}
+.brand small{font-size:10px!important}
+
+/* Generic public content */
+.content,
+.layout,
+.public-sidebar,
+.njcr-home,
+.article-page-ojs{
+  font-size:14px!important;
+}
+.content p,
+.layout p,
+.njcr-home p,
+.archive-record p,
+.issue-record p,
+.search-result p{
+  font-size:14px!important;
+  line-height:1.785rem!important;
+}
+.content h1,
+.layout h1{font-size:24px!important;line-height:30px!important}
+.content h2,
+.layout h2,
+.njcr-home h2{font-size:18px!important;line-height:30px!important}
+.content h3,
+.layout h3,
+.njcr-home h3{font-size:16px!important;line-height:20px!important}
+.content h4,
+.layout h4{font-size:14px!important;line-height:20px!important}
+
+/* Homepage */
+.njcr-home .announce .announcement-title{font-size:13px!important;line-height:1.43!important}
+.njcr-home .announce small{font-size:13px!important;line-height:1.43!important}
+.njcr-home .announce p{font-size:14px!important;line-height:1.6!important}
+.njcr-home .announce .read-more{font-size:13px!important}
+.issue-summary h3{font-size:16px!important}
+.issue-summary p{font-size:14px!important;line-height:1.6!important}
+.home-article h3,
+.home-article h3 a{font-size:14px!important;line-height:1.45!important}
+.article-meta{font-size:13px!important;line-height:1.5!important}
+.outline-button,
+.outline-button.small{font-size:13px!important;line-height:1.3!important;padding:6px 10px!important}
+.article-divider{font-size:13px!important}
+
+/* Right sidebar */
+.public-sidebar{font-size:13px!important;line-height:1.5!important}
+.public-sidebox h3{font-size:16px!important;line-height:20px!important}
+.public-sidebox>a:not(.button){font-size:13px!important}
+.public-sidebar p{font-size:13px!important;line-height:1.5!important}
+.submit-button{font-size:13px!important;padding:7px 11px!important}
+.journal-badge strong{font-size:11px!important}
+.journal-badge span{font-size:10px!important}
+.journal-badge small{font-size:11px!important}
+.keyword-cloud a.kw{font-size:13px!important}
+.scopus-box p{font-size:13px!important}
+.scopus-box .scopus-mark{font-size:22px!important}
+
+/* Share buttons: OJS/NJCR legibility */
+.share-links a{
+  min-height:30px!important;
+  height:30px!important;
+  font-size:13px!important;
+  line-height:30px!important;
+  padding:0 9px!important;
+}
+.share-links .share-icon{font-size:12px!important;min-width:18px!important}
+
+/* Article page */
+.article-breadcrumbs-ojs{font-size:13px!important;line-height:1.43!important}
+.article-head-ojs h1{
+  font-size:24px!important;
+  line-height:30px!important;
+}
+.article-author-ojs{
+  font-size:13px!important;
+  line-height:1.5!important;
+}
+.article-author-ojs strong{
+  font-size:14px!important;
+  line-height:20px!important;
+}
+.author-affiliation-ojs{font-size:13px!important;line-height:1.5!important}
+.author-id-ojs{font-size:13px!important;line-height:1.5!important}
+.orcid-mark-ojs{width:14px!important;height:14px!important;font-size:9px!important}
+.article-keywords-ojs{
+  font-size:14px!important;
+  line-height:1.6!important;
+}
+.article-main-ojs h2{
+  font-size:18px!important;
+  line-height:30px!important;
+}
+.article-abstract-ojs{
+  font-size:14px!important;
+  line-height:1.785rem!important;
+  text-align:left!important;
+}
+.article-meta-block-ojs{
+  font-size:13px!important;
+  line-height:1.5!important;
+}
+.article-meta-label-ojs{font-size:13px!important;line-height:1.43!important}
+.article-meta-value-ojs{font-size:13px!important;line-height:1.5!important}
+.article-meta-link-ojs{font-size:13px!important;line-height:1.5!important}
+.article-citation-ojs{font-size:13px!important;line-height:1.6!important}
+.article-pdf-button-ojs{font-size:13px!important;padding:6px 10px!important}
+.article-pdf-pending-ojs{font-size:13px!important;padding:6px 9px!important}
+.citation-style-current-ojs{font-size:13px!important}
+.citation-more-ojs summary{font-size:13px!important;padding:8px 11px!important}
+.citation-style-menu-ojs>a:not(.citation-download-link-ojs){font-size:14px!important;line-height:1.43!important}
+.citation-style-menu-ojs h4{font-size:16px!important;line-height:20px!important}
+.citation-download-link-ojs{font-size:14px!important;line-height:1.43!important}
+
+/* Article-page external sidebar */
+.article-page-ojs>.public-sidebar{font-size:13px!important;line-height:1.5!important}
+.article-page-ojs>.public-sidebar .public-sidebox h3{font-size:16px!important;line-height:20px!important}
+.article-page-ojs>.public-sidebar .public-sidebox>a:not(.button){font-size:13px!important}
+.article-page-ojs>.public-sidebar p{font-size:13px!important;line-height:1.5!important}
+.article-page-ojs>.public-sidebar .share-links a{
+  height:30px!important;
+  min-height:30px!important;
+  font-size:13px!important;
+  line-height:30px!important;
+}
+.article-page-ojs>.public-sidebar .submit-button{font-size:13px!important;padding:7px 11px!important}
+.article-page-ojs>.public-sidebar .journal-badge strong{font-size:11px!important}
+.article-page-ojs>.public-sidebar .journal-badge span{font-size:10px!important}
+.article-page-ojs>.public-sidebar .journal-badge small{font-size:11px!important}
+
+/* Forms/search/auth pages */
+.content label{font-size:14px!important}
+.content input,
+.content textarea,
+.content select,
+.content button,
+.button{
+  font-size:14px!important;
+  line-height:1.43!important;
+}
+
+/* Footer */
+.footer-grid h3{font-size:16px!important;line-height:20px!important}
+.footer-grid p,
+.footer-grid a{font-size:13px!important;line-height:1.55!important}
+.footer-bottom{font-size:13px!important}
+
+/* Preserve responsive hierarchy */
+@media(max-width:800px){
+  :root,html,body{font-size:14px!important}
+  .brand h1{font-size:24px!important}
+  .brand+nav a{font-size:13px!important}
+  .article-head-ojs h1{font-size:22px!important;line-height:28px!important}
+  .content h1,.layout h1{font-size:22px!important;line-height:28px!important}
+}
