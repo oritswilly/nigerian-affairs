@@ -17,7 +17,25 @@ function db(): PDO {
   $pdo->exec("CREATE TABLE IF NOT EXISTS payment_evidence (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, payment_id BIGINT UNSIGNED NOT NULL UNIQUE, submitted_by BIGINT UNSIGNED NOT NULL, original_name VARCHAR(255) NOT NULL, stored_name VARCHAR(255) NOT NULL, mime_type VARCHAR(120) NOT NULL, file_size BIGINT UNSIGNED NOT NULL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX(submitted_by))");
   $pdo->exec("CREATE TABLE IF NOT EXISTS submission_editors (submission_id BIGINT UNSIGNED PRIMARY KEY, editor_id BIGINT UNSIGNED NOT NULL, assigned_by BIGINT UNSIGNED NULL, assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX(editor_id))");
   $pdo->exec("CREATE TABLE IF NOT EXISTS submission_authors (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, submission_id BIGINT UNSIGNED NOT NULL, sort_order INT NOT NULL DEFAULT 1, name VARCHAR(190) NOT NULL, affiliation VARCHAR(255) NULL, orcid VARCHAR(40) NULL, scopus_id VARCHAR(40) NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX(submission_id), INDEX(submission_id,sort_order))");
+ seed_inaugural_article_authors($pdo);
  return $pdo;
+}
+function seed_inaugural_article_authors(PDO $pdo): void {
+ $sets=[
+  ['%Teachers as Communicators of Ethical Values in Higher Education%',[['Peter Eshioke Egielewa','Department of Mass Communication, Edo State University, Iyamho, Edo State, Nigeria']]],
+  ['%Christian Persecution in Nigeria%',[['Samuel Sunday Alamu','Department of Religious Studies, University of Lagos'],['Victor Adetona','Department of Theology, Wesley University, Ondo']]],
+  ['%Media Campaigns as Determinants of Market Women%',[['Lukman Adegboyega Abioye','Department of Communication and Media Technology, Lead City University, Ibadan, Oyo State'],['Adebisi Kazeem Aro','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State'],['Olusegun Abimbola Odunlami','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State'],['Oluwatosin Samuel Adesola','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State']]],
+  ['%Preservation and Revitalisation of Nigerian Indigenous Languages%',[['Abidemi Opeyemi Omotayo','Department of English, Sikiru Adetona College of Education, Science and Technology, Omu-Ajose, Ogun State'],['Nureni Abolanle Dairo','Department of English, Sikiru Adetona College of Education, Science and Technology, Omu-Ajose, Ogun State']]],
+  ['%Igbo-Language Radio Programmes as Tools for Indigenous Language Preservation%',[['Chukwuebuka Sebastine Okafor','Enugu State University of Science and Technology'],['Joel Asogwa','Department of Mass Communication, Enugu State University of Science and Technology'],['Samuel Elom Chukwudi',null],['Emmanuel Kenechukwu Agbo','Enugu State University of Science and Technology']]],
+  ['%Deciphering the Cosmopolitan Characters of Some Selected Ilorin%',[['Omotosho Ishola','Department of History and Diplomatic Studies, Kwara State University, Malete'],['Wasiu Olayimika Kewulere','Department of History and Diplomatic Studies, Kwara State University, Malete']]],
+  ['%Politics and Evolution of the Nigeria Governors%',[['Mojeed Oyetunji Oyedokun','Department of History and International Studies, Edo State University, Iyamho, Edo State'],['Shola Ahmed Akanbi','Department of History and International Relations, Muhammad Kamalud-deen University, Ilorin']]]
+ ];
+ foreach($sets as [$pattern,$authors]){
+  $q=$pdo->prepare("SELECT id FROM submissions WHERE status='Published' AND title LIKE ? ORDER BY id LIMIT 1");$q->execute([$pattern]);$sid=(int)($q->fetchColumn()?:0);if(!$sid)continue;
+  $check=$pdo->prepare('SELECT COUNT(*) FROM submission_authors WHERE submission_id=?');$check->execute([$sid]);if((int)$check->fetchColumn()>0)continue;
+  $ins=$pdo->prepare('INSERT INTO submission_authors(submission_id,sort_order,name,affiliation,orcid,scopus_id) VALUES(?,?,?,?,NULL,NULL)');
+  foreach($authors as $i=>$a)$ins->execute([$sid,$i+1,$a[0],$a[1]]);
+ }
 }
 function setting(string $key,string $default=''): string {static $cache=[];if(array_key_exists($key,$cache))return $cache[$key];try{$q=db()->prepare('SELECT setting_value FROM journal_settings WHERE setting_key=? LIMIT 1');$q->execute([$key]);$v=$q->fetchColumn();return $cache[$key]=$v===false?$default:(string)$v;}catch(Throwable $e){return $cache[$key]=$default;}}
 function setting_bool(string $key,bool $default=true): bool {return in_array(strtolower(setting($key,$default?'1':'0')),['1','true','yes','on'],true);}
