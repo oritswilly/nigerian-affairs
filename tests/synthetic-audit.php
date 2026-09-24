@@ -8,6 +8,9 @@ $passed=[];
 function pass(string $name,string $detail=''): void {global $passed;$passed[]=$name;echo "[PASS] {$name}".($detail!==''?": {$detail}":'').PHP_EOL;}
 function must(bool $ok,string $message): void {if(!$ok)throw new RuntimeException($message);}
 try {
+ $publishedNow=$pdo->query("SELECT id,title,authors,status FROM submissions WHERE LOWER(status)='published' ORDER BY id")->fetchAll();
+ foreach($publishedNow as $pub)echo '[INFO] published: '.(int)$pub['id'].' | '.$pub['title'].' | '.$pub['authors'].PHP_EOL;
+ echo '[INFO] published_count='.count($publishedNow).PHP_EOL;
  $known=[
   ['%Teachers as Communicators of Ethical Values in Higher Education%',1],
   ['%Christian Persecution in Nigeria%',2],
