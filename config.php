@@ -17,9 +17,20 @@ function db(): PDO {
   $pdo->exec("CREATE TABLE IF NOT EXISTS payment_evidence (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, payment_id BIGINT UNSIGNED NOT NULL UNIQUE, submitted_by BIGINT UNSIGNED NOT NULL, original_name VARCHAR(255) NOT NULL, stored_name VARCHAR(255) NOT NULL, mime_type VARCHAR(120) NOT NULL, file_size BIGINT UNSIGNED NOT NULL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX(submitted_by))");
   $pdo->exec("CREATE TABLE IF NOT EXISTS submission_editors (submission_id BIGINT UNSIGNED PRIMARY KEY, editor_id BIGINT UNSIGNED NOT NULL, assigned_by BIGINT UNSIGNED NULL, assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, INDEX(editor_id))");
   $pdo->exec("CREATE TABLE IF NOT EXISTS submission_authors (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, submission_id BIGINT UNSIGNED NOT NULL, sort_order INT NOT NULL DEFAULT 1, name VARCHAR(190) NOT NULL, affiliation VARCHAR(255) NULL, orcid VARCHAR(40) NULL, scopus_id VARCHAR(40) NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX(submission_id), INDEX(submission_id,sort_order))");
+ seed_home_announcements($pdo);
  seed_inaugural_issue($pdo);
  seed_inaugural_article_authors($pdo);
  return $pdo;
+}
+function seed_home_announcements(PDO $pdo): void {
+ $items=[
+  ['Complete Nigerian Affairs digital archive is now available','Search and browse the complete Nigerian Affairs archive from Volume 1, Issue 1.','2026-09-24 00:00:00'],
+  ['Volume 1, Number 1 (2025) published online','The inaugural issue contains 7 peer-reviewed articles across the Arts, Humanities and Social Sciences.','2026-09-24 00:00:01']
+ ];
+ foreach($items as [$title,$body,$date]){
+  $q=$pdo->prepare('SELECT id FROM announcements WHERE title=? LIMIT 1');$q->execute([$title]);
+  if(!$q->fetchColumn())$pdo->prepare('INSERT INTO announcements(title,body,published_at) VALUES(?,?,?)')->execute([$title,$body,$date]);
+ }
 }
 function seed_inaugural_issue(PDO $pdo): void {
  $email='publication-import@nigeriaaffairs.com';$username='publication_import';
