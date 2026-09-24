@@ -2,7 +2,38 @@
 require __DIR__.'/config.php';
 function admin_sidebar(string $active=''): string { $activeKey=$active==='editor-workflow'?'editor-submissions':$active; $links=['admin-overview'=>'Overview','editor-submissions&queue=my'=>'Submissions','submissions'=>'New Submission','review-assignments'=>'Review Assignments','editor'=>'Editorial Workflow','issue-management'=>'Issues','publication'=>'Publication','users-roles'=>'Users and Roles','journal-settings'=>'Journal Settings','plugins'=>'Plugins','production-controls'=>'OJS Production Controls','audit-report'=>'Reports and Audit','email-centre'=>'Email Centre','apc-payments'=>'APC Payments'];$out='<aside class="ojs35-side"><div class="ojs35-logo"><img src="assets/na-logo.svg?v=20260924-ojs-parity" alt="NA" style="width:92px;height:58px;object-fit:contain;display:block;margin-bottom:8px">'.e(setting('journal_name','Nigerian Affairs')).'<small>Editorial Management</small></div><nav class="ojs35-menu">';foreach($links as $page=>$label){$key=strtok($page,'&');$out.='<a'.($activeKey===$key?' class="on"':'').' href="?page='.$page.'">'.$label.'</a>';}$out.='<div class="sep"></div><a href="./">View Journal</a><a href="?page=logout">Sign Out</a></nav></aside>';return $out;}
 function share_links(string $url,string $title): string {$u=rawurlencode($url);$t=rawurlencode($title);return '<div class="share-links"><a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url='.$u.'&text='.$t.'">𝕏 Share</a><a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u='.$u.'">Facebook</a><a target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url='.$u.'">LinkedIn</a><a target="_blank" rel="noopener" href="https://wa.me/?text='.$t.'%20'.$u.'">WhatsApp</a><a href="mailto:?subject='.$t.'&body='.$u.'">Email</a></div>';}
-function keyword_cloud(): string {try{$rows=db()->query("SELECT keywords FROM submissions WHERE status='Published' AND keywords IS NOT NULL AND keywords<>''")->fetchAll();$counts=[];foreach($rows as $r){foreach(preg_split('/[,;]+/',$r['keywords']) as $k){$k=trim($k);if($k==='')continue;$key=mb_strtolower($k,'UTF-8');if(!isset($counts[$key]))$counts[$key]=['label'=>$k,'n'=>0];$counts[$key]['n']++;}}uasort($counts,fn($a,$b)=>$b['n']<=>$a['n']);$out='';foreach(array_slice($counts,0,20) as $x)$out.='<a href="?page=search&q='.rawurlencode($x['label']).'">'.e($x['label']).'</a>';return $out?:'<span>No keywords yet.</span>';}catch(Throwable $e){return '<span>No keywords yet.</span>';}}
+function keyword_cloud(): string {
+ try{
+  $rows=db()->query("SELECT keywords FROM submissions WHERE status='Published' AND keywords IS NOT NULL AND keywords<>''")->fetchAll();
+  $counts=[];
+  foreach($rows as $r){
+   foreach(preg_split('/[,;]+/',$r['keywords']) as $k){
+    $k=trim($k); if($k==='')continue;
+    $key=mb_strtolower($k,'UTF-8');
+    if(!isset($counts[$key]))$counts[$key]=['label'=>$k,'n'=>0];
+    $counts[$key]['n']++;
+   }
+  }
+  uasort($counts,fn($a,$b)=>($b['n']<=>$a['n']) ?: strcasecmp($a['label'],$b['label']));
+  $items=array_slice(array_values($counts),0,20);
+  if(!$items)return '<span class="keyword-empty">No keywords yet.</span>';
+  $layout=[
+   [4,77,14,-90,'#149527'],[26,39,12,-62,'#808080'],[47,27,16,20,'#8f8f8f'],[80,18,17,0,'#e45ab5'],
+   [128,22,12,58,'#97533a'],[161,14,15,-90,'#15972a'],[63,55,13,34,'#f28a00'],[101,49,15,-15,'#a56ac7'],
+   [125,59,16,55,'#00a7c6'],[46,74,17,26,'#f28a00'],[79,83,18,10,'#ea64ad'],[115,88,17,23,'#8e60c0'],
+   [146,82,15,-90,'#15972a'],[18,105,17,22,'#e267b4'],[61,108,18,13,'#f28a00'],[105,112,17,0,'#8e60c0'],
+   [146,112,14,-90,'#149527'],[35,135,15,18,'#7f7f7f'],[78,137,17,0,'#149527'],[120,137,17,0,'#c3a600']
+  ];
+  $sizes=[22,20,19,18,18,17,17,17,16,16,16,15,15,15,14,14,14,13,13,12];
+  $out='';
+  foreach($items as $i=>$x){
+   $p=$layout[$i]??[10+($i%5)*40,20+intdiv($i,5)*35,14,0,'#149527'];
+   $size=$sizes[$i]??13;
+   $out.='<a class="kw kw-'.($i+1).'" href="?page=search&q='.rawurlencode($x['label']).'" style="--kw-x:'.$p[0].'px;--kw-y:'.$p[1].'px;--kw-size:'.$size.'px;--kw-rot:'.$p[3].'deg;--kw-color:'.$p[4].'" title="'.e($x['label']).'">'.e($x['label']).'</a>';
+  }
+  return $out;
+ }catch(Throwable $e){return '<span class="keyword-empty">No keywords yet.</span>';}
+}
 function public_sidebar(string $url='',string $title='',string $pdf=''): string {$out='<aside class="public-sidebar"><div class="public-sidebox"><h3>Information</h3><a href="?page=readers">For Readers</a><a href="?page=authors">For Authors</a><a href="?page=librarians">For Librarians</a></div><div class="journal-badge"><strong>Nigerian Affairs</strong><span>Arts · Humanities · Social Sciences</span><b>NA</b><small>Peer-reviewed · Open access</small></div>';if($pdf!=='')$out.='<div class="public-sidebox"><h3>Article Access</h3><a class="button" href="'.e($pdf).'" target="_blank" rel="noopener">View PDF</a></div>';else $out.='<div class="public-sidebox"><a class="button submit-button" href="?page=submissions">Make a Submission</a></div>';if($url!=='')$out.='<div class="public-sidebox"><h3>Share</h3>'.share_links($url,$title).'</div>';$out.='<div class="public-sidebox"><h3>Keywords</h3><div class="keyword-cloud">'.keyword_cloud().'</div></div><div class="public-sidebox"><h3>Journal Details</h3><p>ISSN (Print)<br><strong>'.e(setting('issn','Not assigned')).'</strong></p><p>Frequency<br><strong>'.e(setting('frequency','May and November')).'</strong></p><p>Access<br><strong>Open access</strong></p><p>Review<br><strong>Double-blind</strong></p></div><div class="public-sidebox"><h3>Publisher</h3><p>'.e(setting('publisher','Faculty of Arts and Communication, Edo State University, Iyamho')).'</p></div></aside>';return $out;}
 $page=$_GET['page']??'home';
 $msg='';
