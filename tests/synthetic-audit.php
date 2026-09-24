@@ -8,6 +8,23 @@ $passed=[];
 function pass(string $name,string $detail=''): void {global $passed;$passed[]=$name;echo "[PASS] {$name}".($detail!==''?": {$detail}":'').PHP_EOL;}
 function must(bool $ok,string $message): void {if(!$ok)throw new RuntimeException($message);}
 try {
+ $known=[
+  ['%Teachers as Communicators of Ethical Values in Higher Education%',1],
+  ['%Christian Persecution in Nigeria%',2],
+  ['%Media Campaigns as Determinants of Market Women%',4],
+  ['%Preservation and Revitalisation of Nigerian Indigenous Languages%',2],
+  ['%Igbo-Language Radio Programmes as Tools for Indigenous Language Preservation%',4],
+  ['%Deciphering the Cosmopolitan Characters of Some Selected Ilorin%',2],
+  ['%Politics and Evolution of the Nigeria Governors%',2]
+ ];
+ $knownArticles=0;$knownAuthors=0;
+ foreach($known as [$pattern,$expected]){
+  $q=$pdo->prepare("SELECT s.id,(SELECT COUNT(*) FROM submission_authors sa WHERE sa.submission_id=s.id) author_count FROM submissions s WHERE s.status='Published' AND s.title LIKE ? ORDER BY s.id LIMIT 1");
+  $q->execute([$pattern]);$row=$q->fetch();must((bool)$row,"Published inaugural article not found for {$pattern}");must((int)$row['author_count']===$expected,"Structured author count mismatch for {$pattern}: expected {$expected}, got ".(int)$row['author_count']);$knownArticles++;$knownAuthors+=(int)$row['author_count'];
+ }
+ must($knownArticles===7&&$knownAuthors===17,'Inaugural structured metadata totals are incomplete');
+ pass('inaugural_metadata','7 published articles and 17 verified structured author records');
+
  $pdo->beginTransaction();
 
  $tables=['users','submissions','submission_files','submission_editors','reviews','decisions','revisions','production_items','issues','galleys','apc_payments','payment_evidence','submission_authors','audit_log','journal_settings'];
