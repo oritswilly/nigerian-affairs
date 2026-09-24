@@ -49,6 +49,9 @@ try {
  $q=$pdo->query("SELECT COUNT(*) FROM announcements WHERE published_at IS NOT NULL AND title IN ('Complete Nigerian Affairs digital archive is now available','Volume 1, Number 2 (2026) published online')");
  must((int)$q->fetchColumn()===2,'Current issue/archive announcements are incomplete');
  pass('issue_announcements','current issue and archive announcements present');
+ $q=$pdo->query("SELECT COUNT(*) FROM announcements WHERE title='Volume 2, Number 2 (2026) published online'");
+ must((int)$q->fetchColumn()===0,'Obsolete Volume 2, Number 2 announcement must not exist');
+ pass('obsolete_issue_announcement','no incorrect Volume 2, Number 2 announcement remains');
 
  $pdo->beginTransaction();
 
