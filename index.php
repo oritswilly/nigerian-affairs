@@ -18,70 +18,35 @@ function keyword_cloud(): string {
   $items=array_slice(array_values($counts),0,20);
   if(!$items)return '<span class="keyword-empty">No keywords yet.</span>';
 
-  $cw=232.0;$ch=205.0;$font=14.0;
-  $angles=[-90,-55,20,0,55,-90,28,-24,58,22,-18,0,90,-22,18,0,-90,18,0,0];
-  $colors=['#15972a','#808080','#8b8b8b','#e45ab5','#97533a','#15972a','#8e4d3f','#f28a00','#00a7c6','#00a7c6','#8e60c0','#8e60c0','#15972a','#e267b4','#f28a00','#8e60c0','#15972a','#7f7f7f','#15972a','#c3a600'];
-  $placed=[];$out='';
+  // 20 fixed slots. Same font size, mixed NJCR-style angles, no overlap.
+  $slots=[
+   [8,12,58,18,-90,'#149527'], [42,8,62,18,-55,'#808080'], [82,8,72,18,18,'#8f8f8f'], [150,12,72,18,0,'#e45ab5'],
+   [14,48,70,18,0,'#f28a00'], [88,42,68,18,-15,'#a56ac7'], [162,42,56,18,-90,'#149527'],
+   [8,82,70,18,22,'#e267b4'], [82,78,72,18,12,'#f28a00'], [156,76,64,18,55,'#97533a'],
+   [16,116,62,18,-90,'#15972a'], [76,110,68,18,0,'#8e60c0'], [148,112,70,18,-90,'#15972a'],
+   [12,150,72,18,18,'#7f7f7f'], [86,146,58,18,0,'#15972a'], [148,146,68,18,0,'#c3a600'],
+   [28,176,66,18,0,'#00a7c6'], [96,174,64,18,-20,'#e45ab5'], [160,172,58,18,0,'#149527'], [174,112,48,18,90,'#149527']
+  ];
 
-  $wrap=function(string $label): array {
-   if(strlen($label)<=17 || !str_contains($label,' '))return [$label];
+  $wrap=function(string $label): string {
+   if(mb_strlen($label,'UTF-8')<=18 || !str_contains($label,' '))return e($label);
    $words=preg_split('/\s+/',$label);
    $best=1;$bestDiff=PHP_INT_MAX;
    for($i=1;$i<count($words);$i++){
     $a=implode(' ',array_slice($words,0,$i));
     $b=implode(' ',array_slice($words,$i));
-    $d=abs(strlen($a)-strlen($b));
+    $d=abs(mb_strlen($a,'UTF-8')-mb_strlen($b,'UTF-8'));
     if($d<$bestDiff){$best=$i;$bestDiff=$d;}
    }
    $a=implode(' ',array_slice($words,0,$best));
    $b=implode(' ',array_slice($words,$best));
-   return [$a,$b];
+   return e($a).'<br>'.e($b);
   };
 
+  $out='';
   foreach($items as $i=>$x){
-   $lines=$wrap($x['label']);
-   $maxChars=max(array_map('strlen',$lines));
-   $w=max(36.0,min(104.0,$maxChars*7.1));
-   $h=count($lines)===1?18.0:34.0;
-   $angle=$angles[$i]??0;
-   $rad=deg2rad(abs($angle));
-   $bw=abs(cos($rad))*$w+abs(sin($rad))*$h+5;
-   $bh=abs(sin($rad))*$w+abs(cos($rad))*$h+5;
-   $found=null;
-
-   for($s=0;$s<900;$s++){
-    $r=2.2+0.31*$s;
-    $theta=$s*0.53;
-    $cx=$cw/2+cos($theta)*$r;
-    $cy=$ch/2+sin($theta)*$r;
-    $bx=$cx-$bw/2;$by=$cy-$bh/2;
-    if($bx<2||$by<2||$bx+$bw>$cw-2||$by+$bh>$ch-2)continue;
-    $hit=false;
-    foreach($placed as $p){
-     if(!($bx+$bw+2<$p[0]||$bx>$p[2]+2||$by+$bh+2<$p[1]||$by>$p[3]+2)){$hit=true;break;}
-    }
-    if(!$hit){$found=[$cx,$cy,$bx,$by];break;}
-   }
-
-   if(!$found){
-    $angle=0;$bw=$w+5;$bh=$h+5;
-    for($y=4;$y<=$ch-$bh-4 && !$found;$y+=5){
-     for($x0=4;$x0<=$cw-$bw-4;$x0+=5){
-      $hit=false;
-      foreach($placed as $p){
-       if(!($x0+$bw+2<$p[0]||$x0>$p[2]+2||$y+$bh+2<$p[1]||$y>$p[3]+2)){$hit=true;break;}
-      }
-      if(!$hit){$found=[$x0+$bw/2,$y+$bh/2,$x0,$y];break;}
-     }
-    }
-   }
-
-   if(!$found)continue;
-   [$cx,$cy,$bx,$by]=$found;
-   $placed[]=[$bx,$by,$bx+$bw,$by+$bh];
-   $left=$cx-$w/2;$top=$cy-$h/2;
-   $html=implode('<br>',array_map('e',$lines));
-   $out.='<a class="kw" href="?page=search&q='.rawurlencode($x['label']).'" style="--kw-left:'.round($left,1).'px;--kw-top:'.round($top,1).'px;--kw-w:'.round($w,1).'px;--kw-h:'.round($h,1).'px;--kw-rot:'.$angle.'deg;--kw-color:'.$colors[$i%count($colors)].'" title="'.e($x['label']).'"><span>'.$html.'</span></a>';
+   $s=$slots[$i];
+   $out.='<a class="kw kw-'.($i+1).'" href="?page=search&q='.rawurlencode($x['label']).'" style="--kw-left:'.$s[0].'px;--kw-top:'.$s[1].'px;--kw-w:'.$s[2].'px;--kw-h:'.$s[3].'px;--kw-rot:'.$s[4].'deg;--kw-color:'.$s[5].'" title="'.e($x['label']).'"><span>'.$wrap($x['label']).'</span></a>';
   }
   return $out;
  }catch(Throwable $e){return '<span class="keyword-empty">No keywords yet.</span>';}
@@ -215,7 +180,7 @@ $adminChrome=in_array($page,$adminChromePages,true)||($page==='submissions'&&$u&
 $protectedPages=['dashboard','admin-overview','editor','editor-submissions','editor-workflow','submissions','submission-file','revision','review','review-invitation','payments','payment-evidence','users-roles','journal-settings','audit-report','issue-management','announcement-management','galley-management','review-assignments','publication','plugins','production-controls','email-centre','apc-payments'];
 if(in_array($page,$protectedPages,true)&&!$u){header('Location: ?page=login');exit;}
 ?><!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="na-build" content="20260924-exact-banner-1455"><title><?=e(ucfirst($page))?> | <?=e($journalName)?></title><link rel="stylesheet" href="assets/style.css?v=20260924-keywords-cloud-v2"></head><body>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="na-build" content="20260924-exact-banner-1455"><title><?=e(ucfirst($page))?> | <?=e($journalName)?></title><link rel="stylesheet" href="assets/style.css?v=20260924-keywords-cloud-v3"></head><body>
 <?php if(!$adminChrome): ?>
 <div class="utility"><div class="wide"><select aria-label="Interface language"><option>English</option><option>Français</option><option>Español</option><option>Português</option><option>Deutsch</option><option>العربية</option><option>Hausa</option><option>Yorùbá</option><option>Igbo</option><option>Kiswahili</option></select><span><?php if($u): ?><a href="?page=dashboard">Dashboard</a><?php if(has_role($u,'Journal Manager')||has_role($u,'Site Administrator')): ?><a href="?page=admin-overview">Administration</a><?php endif; ?><a href="?page=logout">Logout</a><?php else: ?><a href="?page=register">Register</a><a href="?page=login">Login</a><?php endif; ?></span></div></div>
 <header><div class="wide brand"><img src="assets/na-logo.svg?v=20260924-ojs-parity" alt="Nigerian Affairs NA logo" style="width:88px;height:72px;object-fit:contain"><div><h1><?=e($journalName)?></h1><small>ARTS · HUMANITIES · SOCIAL SCIENCES</small></div></div><nav class="wide"><a href="./">Home</a><a href="?page=about">About the journal</a><a href="?page=current">Current</a><a href="?page=policies">Journal Policies</a><a href="?page=ethics">Publication Ethics</a><a href="?page=editorial">Editorial Team</a><a href="?page=about">Aims and Scope</a><a href="?page=authors">Instructions to Authors</a><a href="?page=archives">Archives</a><a href="?page=announcements">Announcements</a><a href="?page=contact">Contact</a><a href="?page=search">Search</a></nav></header>
