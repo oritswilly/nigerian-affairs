@@ -8,3 +8,30 @@
 .ojs35-side{width:244px!important;flex-basis:244px!important}.ojs35-side>a,.ojs35-menu a{display:block!important;padding:12px 20px!important;border-left:4px solid transparent!important}.ojs35-side>a:hover,.ojs35-side>a.on,.ojs35-menu a:hover,.ojs35-menu a.on{background:#1f2d38!important;border-left-color:#4aa3d2!important}.ojs35-bar{min-height:64px!important;height:auto!important;padding:12px 28px!important}.ojs35-content{padding:28px!important}.ojs35-tabs a.on{border-bottom-color:#006798!important}
 
 .public-sidebar{border-left:1px solid #d8dfe2;padding:28px 23px}.public-sidebox{padding:0 0 18px;margin:0 0 18px;border-bottom:1px solid #d8dfe2}.public-sidebox:last-child{border-bottom:0}.public-sidebox h3{margin:0 0 10px;color:#4b5d69;font-size:16px}.public-sidebox>a:not(.button){display:block;margin:7px 0;text-decoration:none}.share-links{display:flex;flex-wrap:wrap;gap:7px}.share-links a{display:inline-block!important;margin:0!important;padding:5px 8px;border:1px solid #c7d2d8;border-radius:2px;text-decoration:none;font-size:12px;background:#fff}.keyword-cloud{display:flex;flex-wrap:wrap;gap:6px}.keyword-cloud a{display:inline-block!important;margin:0!important;padding:3px 6px;background:#f1f5f6;border-radius:2px;text-decoration:none;font-size:12px}.issue-actions{display:flex;gap:8px;flex-wrap:wrap}.button.secondary{background:#fff;color:#006798}.announcement-strip{border:1px solid #d5dadd;background:#f7f9fa;padding:16px;margin:0 0 26px}.announcement-strip small{display:block;color:#6b7982;margin-top:4px}.archive-record{padding:10px 0;border-top:1px solid #edf0f2}.archive-record h4{margin:0 0 3px}.archive-record p{margin:3px 0}.issue-record h3{margin-bottom:5px}
+
+/* Official Nigerian Affairs cover palette, Volume 1 Issue 1 (December 2025) */
+:root{--na-green:#006633;--na-dark:#284c3b;--na-deep:#0b341d;--na-mint:#66ffcc;--na-mint-soft:#dffbef;--na-cream:#f6f4e8;--na-ink:#173326;--na-line:#b8cdbf;--na-white:#fff}
+body{color:var(--na-ink);background:var(--na-white)}a{color:var(--na-green)}
+.utility{background:var(--na-deep);border-bottom-color:#184b33;color:#fff}.utility a,.utility select{color:#fff}.utility select{background:var(--na-deep)}
+header{border-bottom-color:var(--na-line)}.brand h1{color:var(--na-green)}.brand small{color:var(--na-dark)}
+.brand+nav{border-top-color:var(--na-line);background:#fff}.brand+nav a{color:var(--na-dark);border-left-color:#e3eee7}.brand+nav a:hover{background:var(--na-mint-soft);color:var(--na-green)}
+.hero{background:radial-gradient(circle at 78% 22%,rgba(102,255,204,.72),transparent 25%),linear-gradient(118deg,var(--na-deep),var(--na-dark) 50%,#eef8ef 78%,var(--na-cream));border-bottom:6px solid var(--na-mint)}
+.hero:after{background:var(--na-green);color:#fff;border-left:5px solid var(--na-mint)}
+.content h2,.content h3,.layout h1,.layout h2,.layout h3{color:var(--na-dark)}
+.content input,.content textarea,.content select{border-color:var(--na-line)}.content input:focus,.content textarea:focus,.content select:focus{outline:2px solid var(--na-mint);border-color:var(--na-green)}
+.content button,.button{background:var(--na-green);border-color:var(--na-green);color:#fff}.content button:hover,.button:hover{background:var(--na-deep)}.button.secondary{background:#fff;color:var(--na-green);border-color:var(--na-green)}
+.alert{background:var(--na-mint-soft);border-color:#7bd7b3;color:var(--na-deep)}.steps{background:var(--na-mint-soft);border-left:5px solid var(--na-green)}
+.paper{border-top-color:var(--na-line)}.layout,.layout aside,.public-sidebar,.public-sidebox{border-color:var(--na-line)}
+.public-sidebox h3{color:var(--na-dark)}.share-links a{border-color:var(--na-line);color:var(--na-green)}.share-links a:hover{background:var(--na-mint-soft)}
+.keyword-cloud a{background:var(--na-mint-soft);color:var(--na-deep)}.keyword-cloud a:hover{background:var(--na-mint)}
+.announcement-strip{border-color:var(--na-line);background:linear-gradient(90deg,var(--na-mint-soft),#fff)}
+footer{background:var(--na-deep);color:#e8f6ed;border-top:6px solid var(--na-mint)}footer a{color:var(--na-mint)}
+.ojs35{--nav:var(--na-deep);--nav2:var(--na-dark);--blue:var(--na-green);--line:var(--na-line);--bg:#f4f8f5;color:var(--na-ink)}
+.ojs35-side{background:var(--na-deep)!important}.ojs35-logo{border-bottom-color:#35634c}.ojs35-logo small{color:#bfe4cf}.ojs35-side>a,.ojs35-menu a{color:#e4f4e9!important}
+.ojs35-side>a:hover,.ojs35-side>a.on,.ojs35-menu a:hover,.ojs35-menu a.on{background:var(--na-dark)!important;border-left-color:var(--na-mint)!important;color:#fff!important}
+.ojs35-menu .sep{border-top-color:#35634c}.ojs35-bar{border-bottom-color:var(--na-line)}.ojs35-tabs a.on{color:var(--na-green)!important;border-bottom-color:var(--na-mint)!important}
+.ojs35 th{background:var(--na-mint-soft);color:var(--na-dark)}.ojs35 td{border-bottom-color:#d9e7de}.ojs35 .button,.ojs35 button{background:var(--na-green)}.ojs35 .button:hover,.ojs35 button:hover{background:var(--na-deep)}
+.ojs35 input,.ojs35 select,.ojs35 textarea{border-color:var(--na-line)}.ojs35-panel,.ojs35-card{border-color:var(--na-line)}
+.official-cover-band{background:linear-gradient(90deg,var(--na-green),var(--na-mint));color:var(--na-deep);padding:9px 16px;font-family:Georgia,'Times New Roman',serif;font-size:17px;letter-spacing:.02em}
+.home-intro{background:#fff;border:1px solid var(--na-line);border-top:7px solid var(--na-green);padding:22px;margin-bottom:26px}.home-intro h1{font-family:Georgia,'Times New Roman',serif;color:var(--na-green);font-size:30px;margin:0 0 6px}.home-intro .issue-line{display:inline-block;background:var(--na-mint);color:var(--na-deep);padding:5px 10px;font-weight:700}
+.search-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.search-result{padding:18px 0}.search-result h3{margin-bottom:4px}@media(max-width:800px){.search-grid{grid-template-columns:1fr}}
