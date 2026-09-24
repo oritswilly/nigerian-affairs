@@ -21,6 +21,7 @@ function db(): PDO {
  seed_inaugural_issue($pdo);
  seed_inaugural_article_authors($pdo);
  seed_june_2026_issue($pdo);
+ seed_verified_author_ids($pdo);
  return $pdo;
 }
 function seed_home_announcements(PDO $pdo): void {
@@ -104,19 +105,19 @@ function seed_inaugural_issue(PDO $pdo): void {
 }
 function seed_inaugural_article_authors(PDO $pdo): void {
  $sets=[
-  ['%Teachers as Communicators of Ethical Values in Higher Education%',[['Peter Eshioke Egielewa','Department of Mass Communication, Edo State University, Iyamho, Edo State, Nigeria']]],
+  ['%Teachers as Communicators of Ethical Values in Higher Education%',[['Peter Eshioke Egielewa','Department of Mass Communication, Edo State University, Iyamho, Edo State, Nigeria','0000-0002-3670-2835',null]]],
   ['%Christian Persecution in Nigeria%',[['Samuel Sunday Alamu','Department of Religious Studies, University of Lagos'],['Victor Adetona','Department of Theology, Wesley University, Ondo']]],
-  ['%Media Campaigns as Determinants of Market Women%',[['Lukman Adegboyega Abioye','Department of Communication and Media Technology, Lead City University, Ibadan, Oyo State'],['Adebisi Kazeem Aro','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State'],['Olusegun Abimbola Odunlami','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State'],['Oluwatosin Samuel Adesola','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State']]],
+  ['%Media Campaigns as Determinants of Market Women%',[['Lukman Adegboyega Abioye','Department of Communication and Media Technology, Lead City University, Ibadan, Oyo State'],['Adebisi Kazeem Aro','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State','0009-0006-5671-7512',null],['Olusegun Abimbola Odunlami','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State','0000-0002-6305-8678',null],['Oluwatosin Samuel Adesola','Department of Mass Communication, Abraham Adesanya Polytechnic, Ijebu-Igbo, Ogun State']]],
   ['%Preservation and Revitalisation of Nigerian Indigenous Languages%',[['Abidemi Opeyemi Omotayo','Department of English, Sikiru Adetona College of Education, Science and Technology, Omu-Ajose, Ogun State'],['Nureni Abolanle Dairo','Department of English, Sikiru Adetona College of Education, Science and Technology, Omu-Ajose, Ogun State']]],
   ['%Igbo-Language Radio Programmes as Tools for Indigenous Language Preservation%',[['Chukwuebuka Sebastine Okafor','Enugu State University of Science and Technology'],['Joel Asogwa','Department of Mass Communication, Enugu State University of Science and Technology'],['Samuel Elom Chukwudi',null],['Emmanuel Kenechukwu Agbo','Enugu State University of Science and Technology']]],
   ['%Deciphering the Cosmopolitan Characters of Some Selected Ilorin%',[['Omotosho Ishola','Department of History and Diplomatic Studies, Kwara State University, Malete'],['Wasiu Olayimika Kewulere','Department of History and Diplomatic Studies, Kwara State University, Malete']]],
-  ['%Politics and Evolution of the Nigeria Governors%',[['Mojeed Oyetunji Oyedokun','Department of History and International Studies, Edo State University, Iyamho, Edo State'],['Shola Ahmed Akanbi','Department of History and International Relations, Muhammad Kamalud-deen University, Ilorin']]]
+  ['%Politics and Evolution of the Nigeria Governors%',[['Mojeed Oyetunji Oyedokun','Department of History and International Studies, Edo State University, Iyamho, Edo State','0009-0004-6452-285X',null],['Shola Ahmed Akanbi','Department of History and International Relations, Muhammad Kamalud-deen University, Ilorin']]]
  ];
  foreach($sets as [$pattern,$authors]){
   $q=$pdo->prepare("SELECT id FROM submissions WHERE status='Published' AND title LIKE ? ORDER BY id LIMIT 1");$q->execute([$pattern]);$sid=(int)($q->fetchColumn()?:0);if(!$sid)continue;
   $check=$pdo->prepare('SELECT COUNT(*) FROM submission_authors WHERE submission_id=?');$check->execute([$sid]);if((int)$check->fetchColumn()>0)continue;
-  $ins=$pdo->prepare('INSERT INTO submission_authors(submission_id,sort_order,name,affiliation,orcid,scopus_id) VALUES(?,?,?,?,NULL,NULL)');
-  foreach($authors as $i=>$a)$ins->execute([$sid,$i+1,$a[0],$a[1]]);
+  $ins=$pdo->prepare('INSERT INTO submission_authors(submission_id,sort_order,name,affiliation,orcid,scopus_id) VALUES(?,?,?,?,?,?)');
+  foreach($authors as $i=>$a)$ins->execute([$sid,$i+1,$a[0],$a[1],$a[2]??null,$a[3]??null]);
  }
 }
 function seed_june_2026_issue(PDO $pdo): void {
@@ -148,7 +149,7 @@ function seed_june_2026_issue(PDO $pdo): void {
    'Femicide Reporting, Media, Public Perception, Audience Responses',
    '15-27',
    [
-    ['Olanrewaju Amos Arisoyin','Department of Mass Communication, Trinity University, Yaba, Lagos'],
+    ['Olanrewaju Amos Arisoyin','Department of Mass Communication, Trinity University, Yaba, Lagos','0009-0003-9751-1236',null],
     ['Odunayo Elizabeth Olajuwon','Department of Mass Communication, Ladoke Akintola University of Technology, Ogbomoso, Oyo State'],
     ['Monisola Aribigbela','Department of Mass Communication, Trinity University, Yaba, Lagos']
    ]
@@ -204,6 +205,18 @@ function seed_june_2026_issue(PDO $pdo): void {
   }
  }
  $pdo->exec("UPDATE submission_authors SET orcid='0000-0001-5405-765X',scopus_id='57862966200' WHERE name='Wilfred Oritsesan Olley'");
+}
+function seed_verified_author_ids(PDO $pdo): void {
+ $verified=[
+  ['Peter Eshioke Egielewa','0000-0002-3670-2835',null],
+  ['Adebisi Kazeem Aro','0009-0006-5671-7512',null],
+  ['Olusegun Abimbola Odunlami','0000-0002-6305-8678',null],
+  ['Mojeed Oyetunji Oyedokun','0009-0004-6452-285X',null],
+  ['Olanrewaju Amos Arisoyin','0009-0003-9751-1236',null],
+  ['Wilfred Oritsesan Olley','0000-0001-5405-765X','57862966200']
+ ];
+ $q=$pdo->prepare('UPDATE submission_authors SET orcid=?, scopus_id=COALESCE(?,scopus_id) WHERE name=?');
+ foreach($verified as [$name,$orcid,$scopus])$q->execute([$orcid,$scopus,$name]);
 }
 function setting(string $key,string $default=''): string {static $cache=[];if(array_key_exists($key,$cache))return $cache[$key];try{$q=db()->prepare('SELECT setting_value FROM journal_settings WHERE setting_key=? LIMIT 1');$q->execute([$key]);$v=$q->fetchColumn();return $cache[$key]=$v===false?$default:(string)$v;}catch(Throwable $e){return $cache[$key]=$default;}}
 function setting_bool(string $key,bool $default=true): bool {return in_array(strtolower(setting($key,$default?'1':'0')),['1','true','yes','on'],true);}
