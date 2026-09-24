@@ -38,6 +38,10 @@ try {
  must((int)$q->fetchColumn()===11,'June 2026 structured author metadata must contain 11 author records');
  pass('june_2026_issue','5 published articles, pages 1-59 and 11 structured author records');
 
+ $q=$pdo->query("SELECT COUNT(*) FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)' AND CHAR_LENGTH(s.abstract)>=800");
+ must((int)$q->fetchColumn()===5,'All five June 2026 articles must contain their full published abstracts');
+ pass('june_2026_full_abstracts','all 5 published abstracts are complete');
+
  $q=$pdo->query("SELECT COUNT(*) FROM submission_authors WHERE name='Wilfred Oritsesan Olley' AND orcid='0000-0001-5405-765X' AND scopus_id='57862966200'");
  must((int)$q->fetchColumn()>=1,'Wilfred Oritsesan Olley ORCID/Scopus metadata is incorrect');
  pass('wilfred_identifiers','ORCID 0000-0001-5405-765X and Scopus ID 57862966200');
