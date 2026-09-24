@@ -64,3 +64,26 @@ header{background:var(--na-green);border-bottom:0}
 .keyword-cloud{gap:4px}.keyword-cloud a{font-size:10px;padding:2px 5px;background:var(--na-mint-soft)}
 footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr 1fr;gap:28px}.footer-grid h3{font-size:13px}.footer-grid p,.footer-grid a{font-size:11px}.footer-bottom{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.18);margin-top:18px;padding-top:13px;font-size:10px}.footer-bottom a{color:#dffbef}
 @media(max-width:800px){.brand{height:78px}.brand h1{font-size:22px}.brand+nav{overflow:visible}.hero{height:150px!important}.layout{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.article-meta{display:block}.article-meta .pages{display:block;margin-top:3px}.footer-bottom{display:block}.footer-bottom span{display:block;margin:4px 0}}
+
+/* NJCR exact-format parity for NA home and author-facing pages */
+html,body{font-family:"Noto Sans",Arial,Helvetica,sans-serif!important;font-size:13px!important;line-height:1.5!important;color:#151515!important}
+body{font-weight:400!important}
+.wide{width:1160px!important;max-width:calc(100% - 40px)!important;margin-left:auto!important;margin-right:auto!important}
+.utility{height:30px!important}.utility .wide{height:30px!important;font-size:11px!important}
+.brand{height:88px!important}.brand img{width:72px!important;height:58px!important;margin-right:16px!important}.brand h1{font-family:"Noto Sans",Arial,Helvetica,sans-serif!important;font-size:27px!important;font-weight:700!important;line-height:1.12!important}.brand small{font-size:9px!important;line-height:1.2!important;letter-spacing:2px!important}
+.brand+nav{min-height:46px!important;align-content:center!important}.brand+nav a{font-family:"Noto Sans",Arial,Helvetica,sans-serif!important;font-size:11px!important;font-weight:600!important;line-height:1.3!important;padding:8px 10px!important}
+.hero{height:auto!important;min-height:0!important;background:none!important;border:0!important;overflow:hidden!important;position:relative!important}
+.hero img{display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;object-position:center!important}
+.layout{grid-template-columns:minmax(0,1fr) 285px!important;min-height:650px!important}
+.layout>section{padding:28px 30px!important}.layout>aside{padding:25px 22px!important}
+.njcr-home h2,.public-inner h1{font-family:"Noto Sans",Arial,Helvetica,sans-serif!important;color:#151515!important;font-size:19px!important;font-weight:700!important;line-height:1.25!important}
+.njcr-home h3,.public-inner h2{font-family:"Noto Sans",Arial,Helvetica,sans-serif!important;color:#151515!important;font-size:13px!important;font-weight:700!important;line-height:1.35!important}
+.public-inner .inner-main>h1{margin:0 0 18px!important}.public-inner .inner-main>h2{margin:22px 0 8px!important}.public-inner .inner-main>p{font-size:13px!important;line-height:1.65!important;margin:0 0 14px!important;max-width:760px!important}
+.breadcrumbs{font-size:11px!important;color:#6c7670!important;margin:0 0 16px!important}.breadcrumbs a{text-decoration:none!important}
+.announce a,.home-article h3 a{font-size:12px!important;font-weight:700!important}.announce small,.home-article .article-meta,.public-sidebar,.public-sidebar p,.public-sidebar a{font-size:11px!important}
+.issue-summary p{font-size:12px!important;line-height:1.55!important}.home-article{padding:18px 0!important}.home-article h3{font-size:12px!important;line-height:1.42!important}.home-article .article-meta{line-height:1.55!important}
+.outline-button{font-family:"Noto Sans",Arial,Helvetica,sans-serif!important;font-size:10px!important;font-weight:600!important;padding:5px 8px!important;border-radius:0!important}
+.public-sidebar h3{font-family:"Noto Sans",Arial,Helvetica,sans-serif!important;font-size:15px!important;font-weight:700!important;line-height:1.3!important}.public-sidebox{padding-bottom:17px!important;margin-bottom:17px!important}
+.keyword-cloud a{font-size:9.5px!important;line-height:1.25!important}.journal-badge strong{font-size:9.5px!important}.journal-badge span,.journal-badge small{font-size:9px!important}
+.footer-grid h3{font-size:12px!important}.footer-grid p,.footer-grid a{font-size:10.5px!important;line-height:1.55!important}.footer-bottom{font-size:9.5px!important}
+@media(max-width:800px){.wide{max-width:100%!important;padding-left:16px!important;padding-right:16px!important}.layout{grid-template-columns:1fr!important}.hero img{width:100%!important;height:auto!important}.brand h1{font-size:22px!important}.public-inner .inner-main>p{max-width:none!important}}
