@@ -28,17 +28,17 @@ try {
  must($knownArticles===7&&$knownAuthors===17,'Inaugural structured metadata totals are incomplete');
  pass('inaugural_metadata','7 published articles and 17 structured author records');
 
- $q=$pdo->query("SELECT COUNT(*) FROM issues WHERE volume=2 AND number=2 AND year=2026 AND status='Published' AND published_at='2026-06-01 00:00:00'");
- must((int)$q->fetchColumn()===1,'Volume 2 No. 2 (2026) issue metadata is missing');
- $q=$pdo->query("SELECT COUNT(*) FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 2 No. 2 (2026)'");
- must((int)$q->fetchColumn()===5,'Volume 2 No. 2 (2026) must contain exactly 5 published articles');
- $q=$pdo->query("SELECT GROUP_CONCAT(p.pages ORDER BY CAST(SUBSTRING_INDEX(p.pages,'-',1) AS UNSIGNED) SEPARATOR ',') FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 2 No. 2 (2026)'");
+ $q=$pdo->query("SELECT COUNT(*) FROM issues WHERE volume=1 AND number=2 AND year=2026 AND status='Published' AND published_at='2026-06-01 00:00:00'");
+ must((int)$q->fetchColumn()===1,'Volume 1 No. 2 (2026) issue metadata is missing');
+ $q=$pdo->query("SELECT COUNT(*) FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)'");
+ must((int)$q->fetchColumn()===5,'Volume 1 No. 2 (2026) must contain exactly 5 published articles');
+ $q=$pdo->query("SELECT GROUP_CONCAT(p.pages ORDER BY CAST(SUBSTRING_INDEX(p.pages,'-',1) AS UNSIGNED) SEPARATOR ',') FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)'");
  must((string)$q->fetchColumn()==='1-14,15-27,28-40,41-49,50-59','June 2026 page ranges are incorrect');
- $q=$pdo->query("SELECT COUNT(*) FROM submission_authors sa JOIN submissions s ON s.id=sa.submission_id JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 2 No. 2 (2026)'");
+ $q=$pdo->query("SELECT COUNT(*) FROM submission_authors sa JOIN submissions s ON s.id=sa.submission_id JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)'");
  must((int)$q->fetchColumn()===11,'June 2026 structured author metadata must contain 11 author records');
  pass('june_2026_issue','5 published articles, pages 1-59 and 11 structured author records');
 
- $q=$pdo->query("SELECT COUNT(*) FROM announcements WHERE published_at IS NOT NULL AND title IN ('Complete Nigerian Affairs digital archive is now available','Volume 2, Number 2 (2026) published online')");
+ $q=$pdo->query("SELECT COUNT(*) FROM announcements WHERE published_at IS NOT NULL AND title IN ('Complete Nigerian Affairs digital archive is now available','Volume 1, Number 2 (2026) published online')");
  must((int)$q->fetchColumn()===2,'Current issue/archive announcements are incomplete');
  pass('issue_announcements','current issue and archive announcements present');
 
