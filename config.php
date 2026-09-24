@@ -20,16 +20,19 @@ function db(): PDO {
  seed_home_announcements($pdo);
  seed_inaugural_issue($pdo);
  seed_inaugural_article_authors($pdo);
+ seed_june_2026_issue($pdo);
  return $pdo;
 }
 function seed_home_announcements(PDO $pdo): void {
+ $pdo->exec("DELETE FROM announcements WHERE title='Volume 1, Number 1 (2025) published online'");
  $items=[
-  ['Complete Nigerian Affairs digital archive is now available','Search and browse the complete Nigerian Affairs archive from Volume 1, Issue 1.','2026-09-24 00:00:00'],
-  ['Volume 1, Number 1 (2025) published online','The inaugural issue contains 7 peer-reviewed articles across the Arts, Humanities and Social Sciences.','2026-09-24 00:00:01']
+  ['Complete Nigerian Affairs digital archive is now available','Volume 1, Number 1 (2025) has moved to the archives and remains available for browsing by issue, article and keyword.','2026-09-24 21:58:02'],
+  ['Volume 2, Number 2 (2026) published online','The June 2026 current issue contains 5 peer-reviewed articles in communication, journalism, music education and Nigerian history.','2026-09-24 21:58:01']
  ];
  foreach($items as [$title,$body,$date]){
-  $q=$pdo->prepare('SELECT id FROM announcements WHERE title=? LIMIT 1');$q->execute([$title]);
-  if(!$q->fetchColumn())$pdo->prepare('INSERT INTO announcements(title,body,published_at) VALUES(?,?,?)')->execute([$title,$body,$date]);
+  $q=$pdo->prepare('SELECT id FROM announcements WHERE title=? ORDER BY id LIMIT 1');$q->execute([$title]);$id=(int)($q->fetchColumn()?:0);
+  if($id)$pdo->prepare('UPDATE announcements SET body=?,published_at=? WHERE id=?')->execute([$body,$date,$id]);
+  else $pdo->prepare('INSERT INTO announcements(title,body,published_at) VALUES(?,?,?)')->execute([$title,$body,$date]);
  }
 }
 function seed_inaugural_issue(PDO $pdo): void {
@@ -114,6 +117,89 @@ function seed_inaugural_article_authors(PDO $pdo): void {
   $check=$pdo->prepare('SELECT COUNT(*) FROM submission_authors WHERE submission_id=?');$check->execute([$sid]);if((int)$check->fetchColumn()>0)continue;
   $ins=$pdo->prepare('INSERT INTO submission_authors(submission_id,sort_order,name,affiliation,orcid,scopus_id) VALUES(?,?,?,?,NULL,NULL)');
   foreach($authors as $i=>$a)$ins->execute([$sid,$i+1,$a[0],$a[1]]);
+ }
+}
+function seed_june_2026_issue(PDO $pdo): void {
+ $email='publication-import@nigeriaaffairs.com';$username='publication_import';
+ $q=$pdo->prepare('SELECT id FROM users WHERE email=? OR username=? LIMIT 1');$q->execute([$email,$username]);$importer=(int)($q->fetchColumn()?:0);
+ if(!$importer){$pdo->prepare('INSERT INTO users(email,username,password_hash,given_name,family_name,affiliation,country,orcid,reviewing_interests,roles,verified) VALUES(?,?,?,?,?,?,?,?,?,?,1)')->execute([$email,$username,password_hash(bin2hex(random_bytes(24)),PASSWORD_DEFAULT),'Publication','Import','Nigerian Affairs Editorial Office','Nigeria','','','Author,Reader']);$importer=(int)$pdo->lastInsertId();}
+ $pdo->prepare("INSERT INTO issues(volume,number,year,title,description,status,published_at,created_at) VALUES(2,2,2026,?,?, 'Published','2026-06-01 00:00:00','2026-06-01 00:00:00') ON DUPLICATE KEY UPDATE title=VALUES(title),description=VALUES(description),status='Published',published_at='2026-06-01 00:00:00'")
+     ->execute(['Nigerian Affairs','Volume 2, Issue 2, June 2026']);
+ $issueLabel='Vol. 2 No. 2 (2026)';
+ $articles=[
+  [
+   'Effectiveness of Broadcast Media in Promoting Skill Acquisition Awareness Among Mass Communication Students at Auchi Polytechnic',
+   'Patrick Afam Anikwe; Otono Momodu; Kelly Odaro-Ekhaguebor',
+   'Skill acquisition among students has become increasingly important amid high unemployment in Nigeria. This survey examined the effectiveness of broadcast media in promoting awareness of skill acquisition among Mass Communication students at Auchi Polytechnic. Questionnaire data were analysed within the Uses and Gratification theoretical framework. Findings indicate that broadcast media are viable and effective channels for awareness, while inadequate funding, low student engagement and limited airtime constrain their effectiveness. The study recommends adequate funding and more engaging skill-acquisition programmes.',
+   'Broadcast Media, Effectiveness, Evaluation, Promotion, Skill Acquisition',
+   '1-14',
+   [
+    ['Patrick Afam Anikwe','Department of Mass Communication, Auchi Polytechnic, Auchi, Edo State'],
+    ['Otono Momodu','Department of Mass Communication, Auchi Polytechnic, Auchi, Edo State'],
+    ['Kelly Odaro-Ekhaguebor','Department of Mass Communication, Auchi Polytechnic, Auchi, Edo State']
+   ]
+  ],
+  [
+   'Audience Awareness and Perception of Femicide Reporting among Trinity University Undergraduates',
+   'Olanrewaju Amos Arisoyin; Odunayo Elizabeth Olajuwon; Monisola Aribigbela',
+   'Femicide remains a persistent phenomenon in Nigeria and media reports play an important role in shaping public awareness, perception and societal responses. Anchored on Perception Theory, this quantitative study used questionnaires to examine audience awareness and perception of femicide reporting among Trinity University undergraduates. Findings indicate varied levels of media coverage and influence and identify concerns about sensationalism, graphic details and victim-blaming. The study recommends broader audience engagement and coordinated media responses to gender-based violence.',
+   'Femicide Reporting, Media, Public Perception, Audience Responses',
+   '15-27',
+   [
+    ['Olanrewaju Amos Arisoyin','Department of Mass Communication, Trinity University, Yaba, Lagos'],
+    ['Odunayo Elizabeth Olajuwon','Department of Mass Communication, Ladoke Akintola University of Technology, Ogbomoso, Oyo State'],
+    ['Monisola Aribigbela','Department of Mass Communication, Trinity University, Yaba, Lagos']
+   ]
+  ],
+  [
+   'Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act',
+   'Edetalehn Oaihimire Idemudia; Wilfred Oritsesan Olley',
+   'The expansion of digital journalism in Nigeria has created new opportunities for public-interest reporting while also increasing exposure to cyberstalking, harassment, threats, impersonation, fraud and harmful falsehoods. This doctrinal legal study examines section 24 of the Cybercrimes Act 2015 and its 2024 amendment, with particular attention to digital journalism and press freedom. Drawing on legislation, constitutional provisions, judicial decisions, regional and international human-rights instruments and documented enforcement practices, the article argues for a restrained, rights-sensitive approach grounded in legality, legitimate aim, necessity, proportionality and protection of bona fide public-interest journalism.',
+   'Cybercrime, digital journalism, freedom of expression, press freedom, section 24, Cybercrimes Act, Nigeria, online speech',
+   '28-40',
+   [
+    ['Edetalehn Oaihimire Idemudia','Faculty of Law, Edo State University, Iyamho, Nigeria'],
+    ['Wilfred Oritsesan Olley','Department of Mass Communication, Edo State University Iyamho, Nigeria']
+   ]
+  ],
+  [
+   'Music Education as a Gateway to Entrepreneurship and Economic Growth in Nigeria: A Qualitative Synthesis of Secondary Evidence',
+   'Dora I. Okunbor',
+   'This qualitative study synthesises secondary evidence on music education as a pathway to entrepreneurship and economic growth in Nigeria. Peer-reviewed articles, books, industry reports and statistical releases were reviewed using thematic analysis. The synthesis identifies competencies in composition, production, marketing, performance, technology, sound design and engineering, management and therapy, and links them with portfolio careers, freelance and gig work, digital entrepreneurship, intellectual-property exploitation and creative self-employment. It recommends stronger practical facilities, improved creative-enterprise data management and greater integration of music business and media practices into curricula.',
+   'Entrepreneurship, Music Education, Entrepreneurial Pathways, Economic Growth, Creative Economy',
+   '41-49',
+   [
+    ['Dora I. Okunbor','Department of Music, University of Delta, Agbor, Delta State, Nigeria']
+   ]
+  ],
+  [
+   'An Appraisal of Struggle for Power in the Damaturu Area of Borno: A Case of Competition Between Kanuri and Fulani Groups Over Political Offices in the Pre-colonial Period up to 1960',
+   'Abubakar Umar; Umar Inuwa Musa',
+   'This study appraises the struggle for political power between Kanuri and Fulani groups in the Damaturu area of Borno from the pre-colonial period to independence. Using a qualitative descriptive and analytical approach based on oral tradition, archival sources and library materials, it traces relations between the groups from early socio-economic interdependence through rivalry, conflict, reconciliation and political incorporation. The study finds that competition over political offices persisted despite cooperation and recommends stronger integration of minority groups into political and socio-economic life.',
+   'Colonial, Competition, Power, Pre-colonial Struggle',
+   '50-59',
+   [
+    ['Abubakar Umar','Department of History and International Studies, Yobe State University, Damaturu, Yobe State'],
+    ['Umar Inuwa Musa','Department of History and International Studies, Yobe State University, Damaturu, Yobe State']
+   ]
+  ]
+ ];
+ foreach($articles as $idx=>[$title,$authors,$abstract,$keywords,$pages,$structured]){
+  $q=$pdo->prepare('SELECT id FROM submissions WHERE title=? LIMIT 1');$q->execute([$title]);$sid=(int)($q->fetchColumn()?:0);
+  $stamp='2026-06-01 00:00:'.str_pad((string)($idx+1),2,'0',STR_PAD_LEFT);
+  if(!$sid){
+   $pdo->prepare("INSERT INTO submissions(author_id,title,authors,abstract,keywords,section,language,references_text,stage,status,created_at,updated_at) VALUES(?,?,?,?,?,'Research Article','English','', 'Publication','Published',?,?)")
+       ->execute([$importer,$title,$authors,$abstract,$keywords,$stamp,$stamp]);$sid=(int)$pdo->lastInsertId();
+  }else{
+   $pdo->prepare("UPDATE submissions SET authors=?,abstract=?,keywords=?,section='Research Article',language='English',stage='Publication',status='Published' WHERE id=?")->execute([$authors,$abstract,$keywords,$sid]);
+  }
+  $pdo->prepare("INSERT INTO production_items(submission_id,copyediting_status,production_status,issue_label,pages,doi,published_at,created_at,updated_at) VALUES(?,'Complete','Published',?,?,NULL,?,?,?) ON DUPLICATE KEY UPDATE copyediting_status='Complete',production_status='Published',issue_label=VALUES(issue_label),pages=VALUES(pages),published_at=VALUES(published_at)")
+      ->execute([$sid,$issueLabel,$pages,$stamp,$stamp,$stamp]);
+  $check=$pdo->prepare('SELECT COUNT(*) FROM submission_authors WHERE submission_id=?');$check->execute([$sid]);
+  if((int)$check->fetchColumn()===0){
+   $ins=$pdo->prepare('INSERT INTO submission_authors(submission_id,sort_order,name,affiliation,orcid,scopus_id) VALUES(?,?,?,?,NULL,NULL)');
+   foreach($structured as $i=>$au)$ins->execute([$sid,$i+1,$au[0],$au[1]]);
+  }
  }
 }
 function setting(string $key,string $default=''): string {static $cache=[];if(array_key_exists($key,$cache))return $cache[$key];try{$q=db()->prepare('SELECT setting_value FROM journal_settings WHERE setting_key=? LIMIT 1');$q->execute([$key]);$v=$q->fetchColumn();return $cache[$key]=$v===false?$default:(string)$v;}catch(Throwable $e){return $cache[$key]=$default;}}
