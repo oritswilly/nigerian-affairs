@@ -65,7 +65,7 @@ header{background:var(--na-green);border-bottom:0}
 footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr 1fr;gap:28px}.footer-grid h3{font-size:13px}.footer-grid p,.footer-grid a{font-size:11px}.footer-bottom{display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.18);margin-top:18px;padding-top:13px;font-size:10px}.footer-bottom a{color:#dffbef}
 @media(max-width:800px){.brand{height:78px}.brand h1{font-size:22px}.brand+nav{overflow:visible}.hero{height:150px!important}.layout{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.article-meta{display:block}.article-meta .pages{display:block;margin-top:3px}.footer-bottom{display:block}.footer-bottom span{display:block;margin:4px 0}}
 
-/* NJCR-style keyword cloud: 20 equal-size words, wrapped and collision-free */
+/* NJCR-style 20-word keyword cloud: all words visible, equal size, no overlap */
 .keyword-cloud{
   position:relative!important;
   display:block!important;
@@ -82,7 +82,7 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
   left:var(--kw-left)!important;
   top:var(--kw-top)!important;
   width:var(--kw-w)!important;
-  height:var(--kw-h)!important;
+  min-height:var(--kw-h)!important;
   display:flex!important;
   align-items:center!important;
   justify-content:center!important;
@@ -92,9 +92,9 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
   background:transparent!important;
   color:var(--kw-color)!important;
   font-family:Georgia,"Times New Roman",serif!important;
-  font-size:14px!important;
+  font-size:12px!important;
   font-weight:400!important;
-  line-height:1.05!important;
+  line-height:1.02!important;
   text-align:center!important;
   text-decoration:none!important;
   white-space:normal!important;
@@ -104,7 +104,12 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
   box-sizing:border-box!important;
   z-index:1!important;
 }
-.keyword-cloud a.kw span{display:block!important;width:100%!important}
+.keyword-cloud a.kw span{
+  display:block!important;
+  width:100%!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
 .keyword-cloud a.kw:hover,
 .keyword-cloud a.kw:focus{
   text-decoration:underline!important;
