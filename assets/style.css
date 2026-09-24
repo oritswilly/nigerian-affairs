@@ -536,3 +536,30 @@ body{color:#222!important}
   .article-head-ojs h1{font-size:22px!important;line-height:28px!important}
   .content h1,.layout h1{font-size:22px!important;line-height:28px!important}
 }
+
+/* Clickable journal masthead */
+.brand-home-link{
+  display:flex!important;
+  align-items:center!important;
+  width:max-content!important;
+  max-width:100%!important;
+  color:inherit!important;
+  text-decoration:none!important;
+  cursor:pointer!important;
+}
+.brand-home-link:hover,
+.brand-home-link:focus{
+  color:inherit!important;
+  text-decoration:none!important;
+}
+.brand-home-link:focus-visible{
+  outline:2px solid var(--na-mint)!important;
+  outline-offset:4px!important;
+}
+.brand-text{
+  display:block!important;
+}
+.brand-home-link h1,
+.brand-home-link small{
+  pointer-events:none!important;
+}
