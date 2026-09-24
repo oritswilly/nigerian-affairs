@@ -174,3 +174,61 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
   text-decoration:none!important;
   outline:none!important;
 }
+
+/* NJCR-matched homepage announcements */
+.njcr-home .announce{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:0!important;
+  margin:0!important;
+  padding:0 0 18px!important;
+  border-bottom:1px solid #d4dde2!important;
+}
+.njcr-home .announce article{
+  min-height:118px!important;
+  padding:0 24px 0 0!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+.njcr-home .announce article+article{
+  border-left:1px solid #d4dde2!important;
+  padding:0 0 0 24px!important;
+}
+.njcr-home .announce .announcement-title{
+  display:block!important;
+  margin:0 0 6px!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:11px!important;
+  line-height:1.35!important;
+  font-weight:700!important;
+  color:#0073a8!important;
+  text-decoration:none!important;
+}
+.njcr-home .announce small{
+  display:block!important;
+  margin:0 0 10px!important;
+  color:#83919a!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+}
+.njcr-home .announce p{
+  margin:0 0 10px!important;
+  font-size:11px!important;
+  line-height:1.45!important;
+  color:#222!important;
+}
+.njcr-home .announce .read-more{
+  display:inline-block!important;
+  margin:0!important;
+  color:#0073a8!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  text-decoration:none!important;
+}
+.njcr-home .announce .read-more:hover,
+.njcr-home .announce .announcement-title:hover{text-decoration:underline!important}
+@media(max-width:800px){
+ .njcr-home .announce{grid-template-columns:1fr!important}
+ .njcr-home .announce article{padding:0 0 16px!important;min-height:0!important}
+ .njcr-home .announce article+article{border-left:0!important;border-top:1px solid #d4dde2!important;padding:16px 0 0!important}
+}
