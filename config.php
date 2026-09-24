@@ -24,7 +24,7 @@ function db(): PDO {
  return $pdo;
 }
 function seed_home_announcements(PDO $pdo): void {
- $pdo->exec("DELETE FROM announcements WHERE title IN ('Volume 1, Number 1 (2025) published online','Volume 1, Number 2 (2026) published online')");
+ $pdo->exec("DELETE FROM announcements WHERE title IN ('Volume 1, Number 1 (2025) published online','Volume 2, Number 2 (2026) published online')");
  $items=[
   ['Complete Nigerian Affairs digital archive is now available','Volume 1, Number 1 (2025) has moved to the archives and remains available for browsing by issue, article and keyword.','2026-09-24 21:58:02'],
   ['Volume 1, Number 2 (2026) published online','The June 2026 current issue contains 5 peer-reviewed articles in communication, journalism, music education and Nigerian history.','2026-09-24 21:58:01']
