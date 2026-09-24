@@ -161,7 +161,7 @@ function seed_june_2026_issue(PDO $pdo): void {
    '28-40',
    [
     ['Edetalehn Oaihimire Idemudia','Faculty of Law, Edo State University, Iyamho, Nigeria'],
-    ['Wilfred Oritsesan Olley','Department of Mass Communication, Edo State University Iyamho, Nigeria']
+    ['Wilfred Oritsesan Olley','Department of Mass Communication, Edo State University Iyamho, Nigeria','0000-0001-5405-765X','57862966200']
    ]
   ],
   [
@@ -199,10 +199,11 @@ function seed_june_2026_issue(PDO $pdo): void {
       ->execute([$sid,$issueLabel,$pages,$stamp,$stamp,$stamp]);
   $check=$pdo->prepare('SELECT COUNT(*) FROM submission_authors WHERE submission_id=?');$check->execute([$sid]);
   if((int)$check->fetchColumn()===0){
-   $ins=$pdo->prepare('INSERT INTO submission_authors(submission_id,sort_order,name,affiliation,orcid,scopus_id) VALUES(?,?,?,?,NULL,NULL)');
-   foreach($structured as $i=>$au)$ins->execute([$sid,$i+1,$au[0],$au[1]]);
+   $ins=$pdo->prepare('INSERT INTO submission_authors(submission_id,sort_order,name,affiliation,orcid,scopus_id) VALUES(?,?,?,?,?,?)');
+   foreach($structured as $i=>$au)$ins->execute([$sid,$i+1,$au[0],$au[1],$au[2]??null,$au[3]??null]);
   }
  }
+ $pdo->exec("UPDATE submission_authors SET orcid='0000-0001-5405-765X',scopus_id='57862966200' WHERE name='Wilfred Oritsesan Olley'");
 }
 function setting(string $key,string $default=''): string {static $cache=[];if(array_key_exists($key,$cache))return $cache[$key];try{$q=db()->prepare('SELECT setting_value FROM journal_settings WHERE setting_key=? LIMIT 1');$q->execute([$key]);$v=$q->fetchColumn();return $cache[$key]=$v===false?$default:(string)$v;}catch(Throwable $e){return $cache[$key]=$default;}}
 function setting_bool(string $key,bool $default=true): bool {return in_array(strtolower(setting($key,$default?'1':'0')),['1','true','yes','on'],true);}
