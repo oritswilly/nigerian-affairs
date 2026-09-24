@@ -8,15 +8,25 @@ $passed=[];
 function pass(string $name,string $detail=''): void {global $passed;$passed[]=$name;echo "[PASS] {$name}".($detail!==''?": {$detail}":'').PHP_EOL;}
 function must(bool $ok,string $message): void {if(!$ok)throw new RuntimeException($message);}
 try {
- $allSubs=$pdo->query("SELECT id,title,authors,stage,status,created_at,updated_at FROM submissions ORDER BY id")->fetchAll();
- echo '[INFO] submissions_total='.count($allSubs).PHP_EOL;
- foreach($allSubs as $pub)echo '[INFO] submission: '.(int)$pub['id'].' | stage='.$pub['stage'].' | status='.$pub['status'].' | '.$pub['title'].' | '.$pub['authors'].PHP_EOL;
- $allProd=$pdo->query("SELECT submission_id,copyediting_status,production_status,issue_label,pages,doi,published_at FROM production_items ORDER BY submission_id")->fetchAll();
- echo '[INFO] production_items_total='.count($allProd).PHP_EOL;
- foreach($allProd as $p)echo '[INFO] production: sid='.(int)$p['submission_id'].' | '.$p['copyediting_status'].' | '.$p['production_status'].' | '.($p['issue_label']??'').' | '.($p['pages']??'').' | '.($p['published_at']??'').PHP_EOL;
- $allIssues=$pdo->query("SELECT id,volume,number,year,title,status,published_at FROM issues ORDER BY id")->fetchAll();
- echo '[INFO] issues_total='.count($allIssues).PHP_EOL;
- foreach($allIssues as $i)echo '[INFO] issue: '.(int)$i['id'].' | Vol '.$i['volume'].' No '.$i['number'].' ('.$i['year'].') | '.$i['status'].' | '.($i['title']??'').' | '.($i['published_at']??'').PHP_EOL;
+ $known=[
+  ['%Teachers as Communicators of Ethical Values in Higher Education%',1],
+  ['%Christian Persecution in Nigeria%',2],
+  ['%Media Campaigns as Determinants of Market Women%',4],
+  ['%Preservation and Revitalisation of Nigerian Indigenous Languages%',2],
+  ['%Igbo-Language Radio Programmes as Tools for Indigenous Language Preservation%',4],
+  ['%Deciphering the Cosmopolitan Characters of Some Selected Ilorin%',2],
+  ['%Politics and Evolution of the Nigeria Governors%',2]
+ ];
+ $knownArticles=0;$knownAuthors=0;
+ foreach($known as [$pattern,$expected]){
+  $q=$pdo->prepare("SELECT s.id,(SELECT COUNT(*) FROM submission_authors sa WHERE sa.submission_id=s.id) author_count FROM submissions s WHERE s.status='Published' AND s.title LIKE ? ORDER BY s.id LIMIT 1");
+  $q->execute([$pattern]);$row=$q->fetch();
+  must((bool)$row,"Published inaugural article not found for {$pattern}");
+  must((int)$row['author_count']===$expected,"Structured author count mismatch for {$pattern}: expected {$expected}, got ".(int)$row['author_count']);
+  $knownArticles++;$knownAuthors+=(int)$row['author_count'];
+ }
+ must($knownArticles===7&&$knownAuthors===17,'Inaugural structured metadata totals are incomplete');
+ pass('inaugural_metadata','7 published articles and 17 structured author records');
 
  $pdo->beginTransaction();
 
