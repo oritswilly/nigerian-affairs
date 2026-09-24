@@ -191,7 +191,7 @@ $adminChrome=in_array($page,$adminChromePages,true)||($page==='submissions'&&$u&
 $protectedPages=['dashboard','admin-overview','editor','editor-submissions','editor-workflow','submissions','submission-file','revision','review','review-invitation','payments','payment-evidence','users-roles','journal-settings','audit-report','issue-management','announcement-management','galley-management','review-assignments','publication','plugins','production-controls','email-centre','apc-payments'];
 if(in_array($page,$protectedPages,true)&&!$u){header('Location: ?page=login');exit;}
 ?><!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="na-build" content="20260924-exact-banner-1455"><title><?=e(ucfirst($page))?> | <?=e($journalName)?></title><link rel="stylesheet" href="assets/style.css?v=20260924-article-ojs35-1"></head><body>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="na-build" content="20260924-exact-banner-1455"><title><?=e(ucfirst($page))?> | <?=e($journalName)?></title><link rel="stylesheet" href="assets/style.css?v=20260924-citation-formats-1"></head><body>
 <?php if(!$adminChrome): ?>
 <div class="utility"><div class="wide"><select aria-label="Interface language"><option>English</option><option>Français</option><option>Español</option><option>Português</option><option>Deutsch</option><option>العربية</option><option>Hausa</option><option>Yorùbá</option><option>Igbo</option><option>Kiswahili</option></select><span><?php if($u): ?><a href="?page=dashboard">Dashboard</a><?php if(has_role($u,'Journal Manager')||has_role($u,'Site Administrator')): ?><a href="?page=admin-overview">Administration</a><?php endif; ?><a href="?page=logout">Logout</a><?php else: ?><a href="?page=register">Register</a><a href="?page=login">Login</a><?php endif; ?></span></div></div>
 <header><div class="wide brand"><img src="assets/na-logo.svg?v=20260924-ojs-parity" alt="Nigerian Affairs NA logo" style="width:88px;height:72px;object-fit:contain"><div><h1><?=e($journalName)?></h1><small>ARTS · HUMANITIES · SOCIAL SCIENCES</small></div></div><nav class="wide"><a href="./">Home</a><a href="?page=about">About the journal</a><a href="?page=current">Current</a><a href="?page=policies">Journal Policies</a><a href="?page=ethics">Publication Ethics</a><a href="?page=editorial">Editorial Team</a><a href="?page=about">Aims and Scope</a><a href="?page=authors">Instructions to Authors</a><a href="?page=archives">Archives</a><a href="?page=announcements">Announcements</a><a href="?page=contact">Contact</a><a href="?page=search">Search</a></nav></header>
@@ -316,10 +316,29 @@ if(in_array($page,$protectedPages,true)&&!$u){header('Location: ?page=login');ex
  $base=rtrim(getenv('APP_URL')?:'', '/');$canonical=$base.'/?page=article&id='.(int)$a['id'];$pdfUrl=$pdf?($base.'/'.ltrim($pdf,'/')):'';
  $aq=db()->prepare('SELECT * FROM submission_authors WHERE submission_id=? ORDER BY sort_order,id');$aq->execute([$a['id']]);$authorRows=$aq->fetchAll();
  $citeNames=$authorRows?array_column($authorRows,'name'):array_values(array_filter(array_map('trim',preg_split('/;|\band\b/i',$a['authors']))));
- $authorText=$citeNames?implode(', ',$citeNames):$a['authors'];$year=substr($a['published_at'],0,4);
- $apa=$authorText.' ('.$year.'). '.$a['title'].'. '.setting('journal_name','Nigerian Affairs').($vol?', '.$vol.($num?'('.$num.')':''):'').($a['pages']?', '.$a['pages']:'').'.'.($a['doi']?' https://doi.org/'.$a['doi']:'');
- $mla=$authorText.'. “'.$a['title'].'.” '.setting('journal_name','Nigerian Affairs').($vol?', vol. '.$vol:'').($num?', no. '.$num:'').', '.$year.($a['pages']?', pp. '.$a['pages']:'').'.';
- $chicago=$authorText.'. “'.$a['title'].'.” '.setting('journal_name','Nigerian Affairs').($vol?' '.$vol:'').($num?', no. '.$num:'').' ('.$year.')'.($a['pages']?': '.$a['pages']:'').'.';
+ $authorText=$citeNames?implode(', ',$citeNames):$a['authors'];$year=substr($a['published_at'],0,4);$journal=setting('journal_name','Nigerian Affairs');
+ $dashPages=str_replace('-', '–', $a['pages']??'');
+ $nameParts=function(string $name): array {$parts=preg_split('/\s+/u',trim($name),-1,PREG_SPLIT_NO_EMPTY);if(!$parts)return ['family'=>'','initials'=>'','natural'=>''];$family=array_pop($parts);$initials='';foreach($parts as $p){$initials.=mb_strtoupper(mb_substr($p,0,1,'UTF-8'),'UTF-8').'. ';}return ['family'=>$family,'initials'=>trim($initials),'natural'=>$name];};
+ $apaNames=[];$ieeeNames=[];$vancouverNames=[];
+ foreach($citeNames as $n){$np=$nameParts($n);$apaNames[]=trim($np['family'].', '.$np['initials']);$ieeeNames[]=trim($np['initials'].' '.$np['family']);$vancouverNames[]=trim($np['family'].' '.str_replace(['.',' '],'',$np['initials']));}
+ $joinLast=function(array $arr,string $word='&'): string {if(count($arr)===0)return '';if(count($arr)===1)return $arr[0];if(count($arr)===2)return $arr[0].', '.$word.' '.$arr[1];$last=array_pop($arr);return implode(', ',$arr).', '.$word.' '.$last;};
+ $apaAuthorText=$joinLast($apaNames,'&');$ieeeAuthorText=$joinLast($ieeeNames,'and');$naturalAuthorText=$joinLast($citeNames,'and');$vancouverAuthorText=implode(', ',$vancouverNames);
+ $doiOrUrl=$a['doi']?'https://doi.org/'.$a['doi']:$canonical;
+ $citationStyles=[
+  'acm'=>$naturalAuthorText.'. '.$year.'. '.$a['title'].'. '.$journal.($vol?' '.$vol:'').($num?', '.$num:'').($a['pages']?' ('.$year.'), '.$dashPages:'').'. '.$doiOrUrl,
+  'acs'=>$naturalAuthorText.'. '.$a['title'].'. '.$journal.' '.$year.($vol?', '.$vol:'').($num?', '.$num:'').($a['pages']?', '.$dashPages:'').'. '.$doiOrUrl,
+  'apa'=>$apaAuthorText.' ('.$year.'). '.$a['title'].'. '.$journal.($vol?', '.$vol.($num?'('.$num.')':''):'').($a['pages']?', '.$dashPages:'').'. '.$doiOrUrl,
+  'abnt'=>mb_strtoupper($apaNames[0]??$authorText,'UTF-8').(count($apaNames)>1?' et al.':'').'. '.$a['title'].'. '.$journal.($vol?', v. '.$vol:'').($num?', n. '.$num:'').($a['pages']?', p. '.$dashPages:'').', '.$year.'. Disponível em: '.$doiOrUrl.'.',
+  'chicago'=>$naturalAuthorText.'. “'.$a['title'].'.” '.$journal.($vol?' '.$vol:'').($num?', no. '.$num:'').' ('.$year.')'.($a['pages']?': '.$dashPages:'').'. '.$doiOrUrl.'.',
+  'harvard'=>$naturalAuthorText.' ('.$year.') ‘'.$a['title'].'’, '.$journal.($vol?', '.$vol.($num?'('.$num.')':''):'').($a['pages']?', pp. '.$dashPages:'').'. Available at: '.$doiOrUrl.'.',
+  'ieee'=>'[1] '.$ieeeAuthorText.', “'.$a['title'].',” '.$journal.($vol?', vol. '.$vol:'').($num?', no. '.$num:'').($a['pages']?', pp. '.$dashPages:'').', '.$year.'. '.$doiOrUrl,
+  'mla'=>$naturalAuthorText.'. “'.$a['title'].'.” '.$journal.($vol?', vol. '.$vol:'').($num?', no. '.$num:'').', '.$year.($a['pages']?', pp. '.$dashPages:'').'. '.$doiOrUrl.'.',
+  'turabian'=>$naturalAuthorText.'. “'.$a['title'].'.” '.$journal.($vol?' '.$vol:'').($num?', no. '.$num:'').' ('.$year.')'.($a['pages']?': '.$dashPages:'').'. '.$doiOrUrl.'.',
+  'vancouver'=>$vancouverAuthorText.'. '.$a['title'].'. '.$journal.'. '.$year.($vol?';'.$vol:'').($num?'('.$num.')':'').($a['pages']?':'.$dashPages:'').'. Available from: '.$doiOrUrl
+ ];
+ $citationLabels=['acm'=>'ACM','acs'=>'ACS','apa'=>'APA','abnt'=>'ABNT','chicago'=>'Chicago','harvard'=>'Harvard','ieee'=>'IEEE','mla'=>'MLA','turabian'=>'Turabian','vancouver'=>'Vancouver'];
+ $selectedCitation=strtolower((string)($_GET['citation']??'apa'));if(!isset($citationStyles[$selectedCitation]))$selectedCitation='apa';
+ $selectedCitationText=$citationStyles[$selectedCitation];
  $iq=db()->prepare("SELECT title,description FROM issues WHERE CONCAT('Vol. ',volume,' No. ',number,' (',year,')')=? LIMIT 1");$iq->execute([$a['issue_label']]);$issueRow=$iq->fetch()?:[];
  $issueDisplay=$a['issue_label'].(!empty($issueRow['description'])?': '.$issueRow['description']:'');
  $currentLabel=(string)(db()->query("SELECT CONCAT('Vol. ',i.volume,' No. ',i.number,' (',i.year,')') FROM issues i WHERE i.status='Published' AND EXISTS (SELECT 1 FROM production_items p JOIN submissions s ON s.id=p.submission_id WHERE s.status='Published' AND p.issue_label=CONCAT('Vol. ',i.volume,' No. ',i.number,' (',i.year,')')) ORDER BY i.published_at DESC,i.year DESC,i.volume DESC,i.number DESC LIMIT 1")->fetchColumn()?:'');
@@ -361,10 +380,19 @@ if(in_array($page,$protectedPages,true)&&!$u){header('Location: ?page=login');ex
      <div class="article-meta-label-ojs">Published</div>
      <div class="article-meta-value-ojs"><?=e(substr($a['published_at'],0,10))?></div>
     </div>
-    <div class="article-meta-block-ojs">
+    <div class="article-meta-block-ojs citation-panel-ojs">
      <div class="article-meta-label-ojs">How to Cite</div>
-     <p class="article-citation-ojs"><?=e($apa)?></p>
-     <details class="citation-more-ojs"><summary>More Citation Formats</summary><div><p><strong>MLA</strong><br><?=e($mla)?></p><p><strong>Chicago</strong><br><?=e($chicago)?></p><p><a href="?page=citation-download&id=<?=(int)$a['id']?>&format=ris">Download RIS</a><br><a href="?page=citation-download&id=<?=(int)$a['id']?>&format=bibtex">Download BibTeX</a></p></div></details>
+     <p class="citation-style-current-ojs"><strong><?=e($citationLabels[$selectedCitation])?><?=$selectedCitation==='apa'?' 7th edition':''?></strong></p>
+     <p class="article-citation-ojs"><?=e($selectedCitationText)?></p>
+     <details class="citation-more-ojs">
+      <summary>More Citation Formats</summary>
+      <div class="citation-style-menu-ojs">
+       <?php foreach($citationLabels as $key=>$label): ?><a href="?page=article&id=<?=(int)$a['id']?>&citation=<?=e($key)?>"><?=e($label)?></a><?php endforeach; ?>
+       <h4>Download Citation</h4>
+       <a class="citation-download-link-ojs" href="?page=citation-download&id=<?=(int)$a['id']?>&format=ris"><span aria-hidden="true">⇩</span> Endnote/Zotero/Mendeley (RIS)</a>
+       <a class="citation-download-link-ojs" href="?page=citation-download&id=<?=(int)$a['id']?>&format=bibtex"><span aria-hidden="true">⇩</span> BibTeX</a>
+      </div>
+     </details>
     </div>
     <div class="article-meta-block-ojs">
      <div class="article-meta-label-ojs">Issue</div>
