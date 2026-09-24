@@ -24,10 +24,10 @@ function db(): PDO {
  return $pdo;
 }
 function seed_home_announcements(PDO $pdo): void {
- $pdo->exec("DELETE FROM announcements WHERE title='Volume 1, Number 1 (2025) published online'");
+ $pdo->exec("DELETE FROM announcements WHERE title IN ('Volume 1, Number 1 (2025) published online','Volume 1, Number 2 (2026) published online')");
  $items=[
   ['Complete Nigerian Affairs digital archive is now available','Volume 1, Number 1 (2025) has moved to the archives and remains available for browsing by issue, article and keyword.','2026-09-24 21:58:02'],
-  ['Volume 2, Number 2 (2026) published online','The June 2026 current issue contains 5 peer-reviewed articles in communication, journalism, music education and Nigerian history.','2026-09-24 21:58:01']
+  ['Volume 1, Number 2 (2026) published online','The June 2026 current issue contains 5 peer-reviewed articles in communication, journalism, music education and Nigerian history.','2026-09-24 21:58:01']
  ];
  foreach($items as [$title,$body,$date]){
   $q=$pdo->prepare('SELECT id FROM announcements WHERE title=? ORDER BY id LIMIT 1');$q->execute([$title]);$id=(int)($q->fetchColumn()?:0);
@@ -120,12 +120,14 @@ function seed_inaugural_article_authors(PDO $pdo): void {
  }
 }
 function seed_june_2026_issue(PDO $pdo): void {
+ $pdo->exec("UPDATE production_items SET issue_label='Vol. 1 No. 2 (2026)' WHERE issue_label='Vol. 2 No. 2 (2026)'");
+ $pdo->exec("DELETE FROM issues WHERE volume=2 AND number=2 AND year=2026");
  $email='publication-import@nigeriaaffairs.com';$username='publication_import';
  $q=$pdo->prepare('SELECT id FROM users WHERE email=? OR username=? LIMIT 1');$q->execute([$email,$username]);$importer=(int)($q->fetchColumn()?:0);
  if(!$importer){$pdo->prepare('INSERT INTO users(email,username,password_hash,given_name,family_name,affiliation,country,orcid,reviewing_interests,roles,verified) VALUES(?,?,?,?,?,?,?,?,?,?,1)')->execute([$email,$username,password_hash(bin2hex(random_bytes(24)),PASSWORD_DEFAULT),'Publication','Import','Nigerian Affairs Editorial Office','Nigeria','','','Author,Reader']);$importer=(int)$pdo->lastInsertId();}
- $pdo->prepare("INSERT INTO issues(volume,number,year,title,description,status,published_at,created_at) VALUES(2,2,2026,?,?, 'Published','2026-06-01 00:00:00','2026-06-01 00:00:00') ON DUPLICATE KEY UPDATE title=VALUES(title),description=VALUES(description),status='Published',published_at='2026-06-01 00:00:00'")
-     ->execute(['Nigerian Affairs','Volume 2, Issue 2, June 2026']);
- $issueLabel='Vol. 2 No. 2 (2026)';
+ $pdo->prepare("INSERT INTO issues(volume,number,year,title,description,status,published_at,created_at) VALUES(1,2,2026,?,?, 'Published','2026-06-01 00:00:00','2026-06-01 00:00:00') ON DUPLICATE KEY UPDATE title=VALUES(title),description=VALUES(description),status='Published',published_at='2026-06-01 00:00:00'")
+     ->execute(['Nigerian Affairs','Volume 1, Issue 2, June 2026']);
+ $issueLabel='Vol. 1 No. 2 (2026)';
  $articles=[
   [
    'Effectiveness of Broadcast Media in Promoting Skill Acquisition Awareness Among Mass Communication Students at Auchi Polytechnic',
