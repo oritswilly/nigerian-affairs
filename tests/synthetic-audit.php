@@ -38,6 +38,10 @@ try {
  must((int)$q->fetchColumn()===11,'June 2026 structured author metadata must contain 11 author records');
  pass('june_2026_issue','5 published articles, pages 1-59 and 11 structured author records');
 
+ $q=$pdo->query("SELECT COUNT(*) FROM submission_authors WHERE name='Wilfred Oritsesan Olley' AND orcid='0000-0001-5405-765X' AND scopus_id='57862966200'");
+ must((int)$q->fetchColumn()>=1,'Wilfred Oritsesan Olley ORCID/Scopus metadata is incorrect');
+ pass('wilfred_identifiers','ORCID 0000-0001-5405-765X and Scopus ID 57862966200');
+
  $q=$pdo->query("SELECT COUNT(*) FROM announcements WHERE published_at IS NOT NULL AND title IN ('Complete Nigerian Affairs digital archive is now available','Volume 1, Number 2 (2026) published online')");
  must((int)$q->fetchColumn()===2,'Current issue/archive announcements are incomplete');
  pass('issue_announcements','current issue and archive announcements present');
