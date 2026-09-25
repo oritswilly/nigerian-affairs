@@ -30,7 +30,7 @@ function seed_home_announcements(PDO $pdo): void {
  $pdo->exec("DELETE FROM announcements WHERE title IN ('Volume 1, Number 1 (2025) published online','Volume 2, Number 2 (2026) published online')");
  $items=[
   ['Complete Nigerian Affairs digital archive is now available','Volume 1, Number 1 (2025) has moved to the archives and remains available for browsing by issue, article and keyword.','2026-09-24 21:58:02'],
-  ['Volume 1, Number 2 (2026) published online','The June 2026 current issue contains 6 peer-reviewed articles in communication, journalism, music education and Nigerian history.','2026-09-24 21:58:01']
+  ['Volume 1, Number 2 (2026) published online','The June 2026 current issue contains 7 peer-reviewed articles covering communication, law, music education, Nigerian history, literary studies and political science.','2026-09-24 21:58:01']
  ];
  foreach($items as [$title,$body,$date]){
   $q=$pdo->prepare('SELECT id FROM announcements WHERE title=? ORDER BY id LIMIT 1');$q->execute([$title]);$id=(int)($q->fetchColumn()?:0);
