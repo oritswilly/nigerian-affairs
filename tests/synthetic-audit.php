@@ -42,6 +42,10 @@ try {
  must((int)$q->fetchColumn()===5,'All five June 2026 articles must contain their full published abstracts');
  pass('june_2026_full_abstracts','all 5 published abstracts are complete');
 
+ $q=$pdo->query("SELECT COUNT(*) FROM galleys g JOIN submissions s ON s.id=g.submission_id JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)' AND g.mime_type='application/pdf' AND g.file_path LIKE '?page=galley&file=na-%'");
+ must((int)$q->fetchColumn()===5,'All five June 2026 articles must have linked PDF galley records');
+ pass('june_2026_galleys','all 5 current-issue articles have PDF galley records');
+
  $q=$pdo->query("SELECT COUNT(*) FROM submission_authors WHERE name='Wilfred Oritsesan Olley' AND orcid='0000-0001-5405-765X' AND scopus_id='57862966200'");
  must((int)$q->fetchColumn()>=1,'Wilfred Oritsesan Olley ORCID/Scopus metadata is incorrect');
  pass('wilfred_identifiers','ORCID 0000-0001-5405-765X and Scopus ID 57862966200');
