@@ -623,3 +623,7 @@ body{color:#222!important}
   overflow-wrap:normal!important;
   word-break:normal!important;
 }
+
+/* Official CC BY 4.0 badge accompanies licensed article content and policy text. */
+.cc-by-badge{display:inline-block!important;margin-top:9px!important;line-height:0!important;text-decoration:none!important}
+.cc-by-badge img{display:block;width:88px;height:31px;object-fit:contain}
