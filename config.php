@@ -21,6 +21,7 @@ function db(): PDO {
  seed_inaugural_issue($pdo);
  seed_inaugural_article_authors($pdo);
  seed_june_2026_issue($pdo);
+ seed_june_2026_galleys($pdo);
  seed_verified_author_ids($pdo);
  return $pdo;
 }
@@ -205,6 +206,26 @@ function seed_june_2026_issue(PDO $pdo): void {
   }
  }
  $pdo->exec("UPDATE submission_authors SET orcid='0000-0001-5405-765X',scopus_id='57862966200' WHERE name='Wilfred Oritsesan Olley'");
+}
+function seed_june_2026_galleys(PDO $pdo): void {
+ $dir=__DIR__.'/storage/uploads';
+ $items=[
+  ['Effectiveness of Broadcast Media in Promoting Skill Acquisition Awareness Among Mass Communication Students at Auchi Polytechnic','na-1-8a6efc3695bdd66a89f064ab.pdf','8a6efc3695bdd66a89f064abddaace4db3f4edf07779278111c16fd0ab63738a'],
+  ['Audience Awareness and Perception of Femicide Reporting among Trinity University Undergraduates','na-2-aed91195bf0e5dd3d805273d.pdf','aed91195bf0e5dd3d805273d97a47fc84312b98f94da089135b78534cf43066a'],
+  ['Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act','na-3-5e43b37f2054abc5a6921e1b.pdf','5e43b37f2054abc5a6921e1bb3c7d239ee77e0cf901436c81d786b7dd44712dc'],
+  ['Music Education as a Gateway to Entrepreneurship and Economic Growth in Nigeria: A Qualitative Synthesis of Secondary Evidence','na-4-794d942ed538edc985f4ba2b.pdf','794d942ed538edc985f4ba2b85d314d2300f57dfa4ee29020e63679c62a935ca'],
+  ['An Appraisal of Struggle for Power in the Damaturu Area of Borno: A Case of Competition Between Kanuri and Fulani Groups Over Political Offices in the Pre-colonial Period up to 1960','na-5-2b831478336108d42cf3da6a.pdf','2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36']
+ ];
+ foreach($items as [$title,$name,$sha]){
+  $full=$dir.'/'.$name;
+  if(!is_file($full)||hash_file('sha256',$full)!==$sha)continue;
+  $q=$pdo->prepare("SELECT s.id FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.title=? AND s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)' LIMIT 1");
+  $q->execute([$title]);$sid=(int)($q->fetchColumn()?:0);if(!$sid)continue;
+  $path='?page=galley&file='.rawurlencode($name);
+  $g=$pdo->prepare("SELECT id FROM galleys WHERE submission_id=? AND mime_type='application/pdf' ORDER BY id DESC LIMIT 1");$g->execute([$sid]);$gid=(int)($g->fetchColumn()?:0);
+  if($gid)$pdo->prepare("UPDATE galleys SET label='PDF',file_path=?,mime_type='application/pdf' WHERE id=?")->execute([$path,$gid]);
+  else $pdo->prepare("INSERT INTO galleys(submission_id,label,file_path,mime_type) VALUES(?,'PDF',?,'application/pdf')")->execute([$sid,$path]);
+ }
 }
 function seed_verified_author_ids(PDO $pdo): void {
  $verified=[
