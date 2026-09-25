@@ -25,30 +25,6 @@ function db(): PDO {
  seed_verified_author_ids($pdo);
  return $pdo;
 }
-function ensure_june_2026_pdf_file(string $name): bool {
- $files=[
-  'na-1-8a6efc3695bdd66a89f064ab.pdf'=>['8a6efc3695bdd66a89f064abddaace4db3f4edf07779278111c16fd0ab63738a','https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-21b8-820e-a3e5-981dcfad5ee6/raw?se=2026-09-25T09%3A39%3A38Z&sp=r&sv=2026-02-06&sr=b&scid=25b33401-db3c-548f-ba51-ed620089f239&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T07%3A26%3A38Z&ske=2026-09-26T07%3A26%3A38Z&sks=b&skv=2026-02-06&sig=1hePh4esBTi1vYHQGN5979GfPqmB7jUGOBzBIq3Bz8w%3D'],
-  'na-2-aed91195bf0e5dd3d805273d.pdf'=>['aed91195bf0e5dd3d805273d97a47fc84312b98f94da089135b78534cf43066a','https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-3df4-820e-bb54-fa72554a1f13/raw?se=2026-09-25T09%3A39%3A39Z&sp=r&sv=2026-02-06&sr=b&scid=e84e029a-ea08-5611-beb7-35267077e093&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T09%3A12%3A37Z&ske=2026-09-26T09%3A12%3A37Z&sks=b&skv=2026-02-06&sig=7C8wc%2BXkT9RpVeeAc0SQrfLh09tmhs/ZuyTsFK3aFeI%3D'],
-  'na-3-5e43b37f2054abc5a6921e1b.pdf'=>['5e43b37f2054abc5a6921e1bb3c7d239ee77e0cf901436c81d786b7dd44712dc','https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-2f44-820e-a0f7-144eba4835e7/raw?se=2026-09-25T09%3A39%3A38Z&sp=r&sv=2026-02-06&sr=b&scid=5fc80af1-99ca-5785-a96a-95e99b88641f&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T07%3A38%3A53Z&ske=2026-09-26T07%3A38%3A53Z&sks=b&skv=2026-02-06&sig=b9PB9u5dkQAGPPzR6QzhtS%2BNxEhvKq%2BpXvf9v3RxHBs%3D'],
-  'na-4-794d942ed538edc985f4ba2b.pdf'=>['794d942ed538edc985f4ba2b85d314d2300f57dfa4ee29020e63679c62a935ca','https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-6c3c-820e-be8d-1d6212181fbe/raw?se=2026-09-25T09%3A39%3A37Z&sp=r&sv=2026-02-06&sr=b&scid=0559a9a3-29af-54df-a85f-2646a956093b&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T09%3A15%3A16Z&ske=2026-09-26T09%3A15%3A16Z&sks=b&skv=2026-02-06&sig=JdcRrB8BcdXkNfOZfYJgsK2H4EsOidSHJKKjrK37C5M%3D'],
-  'na-5-2b831478336108d42cf3da6a.pdf'=>['2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36','https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-a450-820e-9386-8da6e33a6472/raw?se=2026-09-25T09%3A39%3A38Z&sp=r&sv=2026-02-06&sr=b&scid=4e55f6cc-852c-5da5-b316-64b9ad2cd982&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T08%3A48%3A45Z&ske=2026-09-26T08%3A48%3A45Z&sks=b&skv=2026-02-06&sig=MLVrLuIjMuFH35CDYzBkX8hKTJIR1bgffBQYWbppTMI%3D']
- ];
- if(!isset($files[$name]))return false;
- [$sha,$url]=$files[$name];
- $dir=__DIR__.'/storage/uploads';if(!is_dir($dir)&&!mkdir($dir,0770,true))return false;
- $dest=$dir.'/'.$name;
- if(is_file($dest)&&hash_file('sha256',$dest)===$sha)return true;
- $tmp=$dest.'.part';@unlink($tmp);
- $ok=false;
- if(function_exists('curl_init')){
-  $fh=fopen($tmp,'wb');if($fh){$ch=curl_init($url);curl_setopt_array($ch,[CURLOPT_FILE=>$fh,CURLOPT_FOLLOWLOCATION=>true,CURLOPT_FAILONERROR=>true,CURLOPT_CONNECTTIMEOUT=>20,CURLOPT_TIMEOUT=>120]);$ok=curl_exec($ch)!==false;curl_close($ch);fclose($fh);}
- }elseif(filter_var(ini_get('allow_url_fopen'),FILTER_VALIDATE_BOOLEAN)){
-  $ok=@copy($url,$tmp);
- }
- if(!$ok||!is_file($tmp)||hash_file('sha256',$tmp)!==$sha){@unlink($tmp);return false;}
- if(!@rename($tmp,$dest)){@unlink($tmp);return false;}
- return true;
-}
 function seed_home_announcements(PDO $pdo): void {
  $pdo->exec("DELETE FROM announcements WHERE title IN ('Volume 1, Number 1 (2025) published online','Volume 2, Number 2 (2026) published online')");
  $items=[
