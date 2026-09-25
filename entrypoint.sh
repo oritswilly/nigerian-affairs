@@ -1,7 +1,17 @@
 #!/bin/sh
 set -e
 
-# Compatibility guard for the legacy Railway start-command form.
+mkdir -p /app/storage/uploads
+if [ -d /app/assets/galleys ]; then
+  for src in /app/assets/galleys/*.pdf; do
+    [ -f "$src" ] || continue
+    dest="/app/storage/uploads/$(basename "$src")"
+    if [ ! -f "$dest" ] || ! cmp -s "$src" "$dest"; then
+      cp "$src" "$dest"
+    fi
+  done
+fi
+
 if [ "$1" = "php" ] && [ "$2" = "-S" ] && [ "$3" = '0.0.0.0:${PORT:-8080}' ]; then
   shift 3
   exec php -S "0.0.0.0:${PORT:-8080}" "$@"
