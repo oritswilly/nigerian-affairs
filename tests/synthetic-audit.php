@@ -46,6 +46,20 @@ try {
  must((int)$q->fetchColumn()===5,'All five June 2026 articles must have linked PDF galley records');
  pass('june_2026_galleys','all 5 current-issue articles have PDF galley records');
 
+ $galleyHashes=[
+  'na-1-8a6efc3695bdd66a89f064ab.pdf'=>'8a6efc3695bdd66a89f064abddaace4db3f4edf07779278111c16fd0ab63738a',
+  'na-2-aed91195bf0e5dd3d805273d.pdf'=>'aed91195bf0e5dd3d805273d97a47fc84312b98f94da089135b78534cf43066a',
+  'na-3-5e43b37f2054abc5a6921e1b.pdf'=>'5e43b37f2054abc5a6921e1bb3c7d239ee77e0cf901436c81d786b7dd44712dc',
+  'na-4-794d942ed538edc985f4ba2b.pdf'=>'794d942ed538edc985f4ba2b85d314d2300f57dfa4ee29020e63679c62a935ca',
+  'na-5-2b831478336108d42cf3da6a.pdf'=>'2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36'
+ ];
+ foreach($galleyHashes as $file=>$sha){
+  $path=__DIR__.'/../seed_galleys/'.$file;
+  must(is_file($path),'Bundled galley file missing: '.$file);
+  must(hash_file('sha256',$path)===$sha,'Bundled galley checksum mismatch: '.$file);
+ }
+ pass('bundled_june_2026_galleys','all 5 exact PDFs present with verified SHA-256 checksums');
+
  $q=$pdo->query("SELECT COUNT(*) FROM submission_authors WHERE name='Wilfred Oritsesan Olley' AND orcid='0000-0001-5405-765X' AND scopus_id='57862966200'");
  must((int)$q->fetchColumn()>=1,'Wilfred Oritsesan Olley ORCID/Scopus metadata is incorrect');
  pass('wilfred_identifiers','ORCID 0000-0001-5405-765X and Scopus ID 57862966200');
