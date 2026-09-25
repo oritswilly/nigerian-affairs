@@ -64,27 +64,27 @@ function public_sidebar(string $url='',string $title='',string $pdf=''): string 
  return $out;
 }
 $page=$_GET['page']??'home';
-/* Proactive June 2026 galley restore: no-op once checksum-verified files exist. */
-if(PHP_SAPI!=='cli'){
- foreach([
-  'na-1-8a6efc3695bdd66a89f064ab.pdf',
-  'na-2-aed91195bf0e5dd3d805273d.pdf',
-  'na-3-5e43b37f2054abc5a6921e1b.pdf',
-  'na-4-794d942ed538edc985f4ba2b.pdf',
-  'na-5-2b831478336108d42cf3da6a.pdf'
- ] as $restoreGalley){ensure_june_2026_pdf_file($restoreGalley);}
-}
 /* Early binary galley response: must run before any HTML output. */
 if($page==='galley'){
  $name=basename($_GET['file']??'');
  if(!preg_match('/^na-\d+-[a-f0-9]{24}\.pdf$/',$name)){http_response_code(404);exit('Not Found');}
- $full=__DIR__.'/storage/uploads/'.$name;
- if(!is_file($full)&&!ensure_june_2026_pdf_file($name)){http_response_code(404);exit('Not Found');}
- if(!is_file($full)){http_response_code(404);exit('Not Found');}
+ $storageDir=__DIR__.'/storage/uploads';
+ $storage=$storageDir.'/'.$name;
+ $bundled=__DIR__.'/seed_galleys/'.$name;
+ $full=null;
+ if(is_file($storage)){
+  $full=$storage;
+ }elseif(is_file($bundled)){
+  if(!is_dir($storageDir))@mkdir($storageDir,0770,true);
+  if(is_dir($storageDir)&&@copy($bundled,$storage))$full=$storage;
+  else $full=$bundled;
+ }
+ if(!$full||!is_file($full)){http_response_code(404);exit('Not Found');}
  header('Content-Type: application/pdf');
  header('Content-Length: '.filesize($full));
  header('Content-Disposition: inline; filename="'.$name.'"');
  header('X-Content-Type-Options: nosniff');
+ header('Cache-Control: public, max-age=86400');
  readfile($full);
  exit;
 }
