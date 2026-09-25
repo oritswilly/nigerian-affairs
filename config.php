@@ -217,8 +217,6 @@ function seed_june_2026_galleys(PDO $pdo): void {
   ['An Appraisal of Struggle for Power in the Damaturu Area of Borno: A Case of Competition Between Kanuri and Fulani Groups Over Political Offices in the Pre-colonial Period up to 1960','na-5-2b831478336108d42cf3da6a.pdf','2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36']
  ];
  foreach($items as [$title,$name,$sha]){
-  $full=$dir.'/'.$name;
-  if(!is_file($full)||hash_file('sha256',$full)!==$sha)continue;
   $q=$pdo->prepare("SELECT s.id FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.title=? AND s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)' LIMIT 1");
   $q->execute([$title]);$sid=(int)($q->fetchColumn()?:0);if(!$sid)continue;
   $path='?page=galley&file='.rawurlencode($name);
