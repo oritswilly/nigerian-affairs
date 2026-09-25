@@ -207,18 +207,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
  }catch(Throwable $ex){$msg=$ex->getMessage();}
 }
 if($page==='verify-email'&&!empty($_GET['token'])){$hash=hash('sha256',$_GET['token']);$q=db()->prepare('SELECT * FROM email_verifications WHERE token_hash=? AND used_at IS NULL AND expires_at>NOW() LIMIT 1');$q->execute([$hash]);$v=$q->fetch();if($v){db()->prepare('UPDATE users SET verified=1 WHERE id=?')->execute([$v['user_id']]);db()->prepare('UPDATE email_verifications SET used_at=NOW() WHERE id=?')->execute([$v['id']]);$msg='Email verified successfully. You can now log in.';$page='login';}else{$msg='This verification link is invalid or has expired.';}}
-if($page==='galley' && !headers_sent()){
- $name=basename($_GET['file']??'');
- if(!preg_match('/^na-\\d+-[a-f0-9]{24}\\.pdf$/',$name)){http_response_code(404);exit('Not Found');}
- $candidates=[__DIR__.'/storage/uploads/'.$name,__DIR__.'/assets/galleys/'.$name];
- $full=null;foreach($candidates as $candidate){if(is_file($candidate)){$full=$candidate;break;}}
- if(!$full){http_response_code(404);exit('Not Found');}
- header('Content-Type: application/pdf');
- header('Content-Length: '.filesize($full));
- header('Content-Disposition: inline; filename="'.$name.'"');
- header('X-Content-Type-Options: nosniff');
- readfile($full);exit;
-}
 $u=current_user();
 $journalName=setting('journal_name','Nigerian Affairs');$journalPublisher=setting('publisher','Faculty of Arts and Communication, Edo State University, Iyamho');$journalFrequency=setting('frequency','May and November');$journalContact=setting('contact_email','editor@nigeriaaffairs.com');
 if($page==='dashboard'&&$u&&(has_role($u,'Editor')||has_role($u,'Journal Manager')||has_role($u,'Site Administrator'))){header('Location: ?page=admin-overview');exit;}
