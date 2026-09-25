@@ -2,8 +2,8 @@
 set -e
 
 mkdir -p /app/storage/uploads
-if [ -d /app/assets/galleys ]; then
-  for src in /app/assets/galleys/*.pdf; do
+if [ -d /app/seed_galleys ]; then
+  for src in /app/seed_galleys/*.pdf; do
     [ -f "$src" ] || continue
     dest="/app/storage/uploads/$(basename "$src")"
     if [ ! -f "$dest" ] || ! cmp -s "$src" "$dest"; then
