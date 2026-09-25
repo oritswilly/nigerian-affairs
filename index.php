@@ -207,6 +207,18 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
  }catch(Throwable $ex){$msg=$ex->getMessage();}
 }
 if($page==='verify-email'&&!empty($_GET['token'])){$hash=hash('sha256',$_GET['token']);$q=db()->prepare('SELECT * FROM email_verifications WHERE token_hash=? AND used_at IS NULL AND expires_at>NOW() LIMIT 1');$q->execute([$hash]);$v=$q->fetch();if($v){db()->prepare('UPDATE users SET verified=1 WHERE id=?')->execute([$v['user_id']]);db()->prepare('UPDATE email_verifications SET used_at=NOW() WHERE id=?')->execute([$v['id']]);$msg='Email verified successfully. You can now log in.';$page='login';}else{$msg='This verification link is invalid or has expired.';}}
+if($page==='galley' && !headers_sent()){
+ $name=basename($_GET['file']??'');
+ if(!preg_match('/^na-\\d+-[a-f0-9]{24}\\.pdf$/',$name)){http_response_code(404);exit('Not Found');}
+ $candidates=[__DIR__.'/storage/uploads/'.$name,__DIR__.'/assets/galleys/'.$name];
+ $full=null;foreach($candidates as $candidate){if(is_file($candidate)){$full=$candidate;break;}}
+ if(!$full){http_response_code(404);exit('Not Found');}
+ header('Content-Type: application/pdf');
+ header('Content-Length: '.filesize($full));
+ header('Content-Disposition: inline; filename="'.$name.'"');
+ header('X-Content-Type-Options: nosniff');
+ readfile($full);exit;
+}
 $u=current_user();
 $journalName=setting('journal_name','Nigerian Affairs');$journalPublisher=setting('publisher','Faculty of Arts and Communication, Edo State University, Iyamho');$journalFrequency=setting('frequency','May and November');$journalContact=setting('contact_email','editor@nigeriaaffairs.com');
 if($page==='dashboard'&&$u&&(has_role($u,'Editor')||has_role($u,'Journal Manager')||has_role($u,'Site Administrator'))){header('Location: ?page=admin-overview');exit;}
@@ -215,7 +227,7 @@ $adminChrome=in_array($page,$adminChromePages,true)||($page==='submissions'&&$u&
 $protectedPages=['dashboard','admin-overview','editor','editor-submissions','editor-workflow','submissions','submission-file','revision','review','review-invitation','payments','payment-evidence','users-roles','journal-settings','audit-report','issue-management','announcement-management','galley-management','review-assignments','publication','plugins','production-controls','email-centre','apc-payments'];
 if(in_array($page,$protectedPages,true)&&!$u){header('Location: ?page=login');exit;}
 ?><!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="na-build" content="20260924-exact-banner-1455"><title><?=e(ucfirst($page))?> | <?=e($journalName)?></title><link rel="stylesheet" href="assets/style.css?v=20260924-affiliation-fullwidth-1"></head><body>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="na-build" content="20260924-exact-banner-1455"><title><?=e(ucfirst($page))?> | <?=e($journalName)?></title><link rel="stylesheet" href="assets/style.css?v=20260925-galley-route-early-1"></head><body>
 <?php if(!$adminChrome): ?>
 <div class="utility"><div class="wide"><select aria-label="Interface language"><option>English</option><option>Français</option><option>Español</option><option>Português</option><option>Deutsch</option><option>العربية</option><option>Hausa</option><option>Yorùbá</option><option>Igbo</option><option>Kiswahili</option></select><span><?php if($u): ?><a href="?page=dashboard">Dashboard</a><?php if(has_role($u,'Journal Manager')||has_role($u,'Site Administrator')): ?><a href="?page=admin-overview">Administration</a><?php endif; ?><a href="?page=logout">Logout</a><?php else: ?><a href="?page=register">Register</a><a href="?page=login">Login</a><?php endif; ?></span></div></div>
 <header><div class="wide brand"><a class="brand-home-link" href="./" aria-label="Return to Nigerian Affairs home page"><img src="assets/na-logo.svg?v=20260924-ojs-parity" alt="Nigerian Affairs NA logo" style="width:88px;height:72px;object-fit:contain"><span class="brand-text"><h1><?=e($journalName)?></h1><small>ARTS · HUMANITIES · SOCIAL SCIENCES</small></span></a></div><nav class="wide"><a href="./">Home</a><a href="?page=about">About the journal</a><a href="?page=current">Current</a><a href="?page=policies">Journal Policies</a><a href="?page=ethics">Publication Ethics</a><a href="?page=editorial">Editorial Team</a><a href="?page=about">Aims and Scope</a><a href="?page=authors">Instructions to Authors</a><a href="?page=archives">Archives</a><a href="?page=announcements">Announcements</a><a href="?page=contact">Contact</a><a href="?page=search">Search</a></nav></header>
