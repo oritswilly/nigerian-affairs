@@ -157,12 +157,12 @@ function seed_june_2026_issue(PDO $pdo): void {
   ],
   [
    'Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act',
-   'Edetalehn Oaihimire Idemudia; Wilfred Oritsesan Olley',
+   'Idemudia Edetalehn OAIHIMIRE; Wilfred Oritsesan Olley',
    'The rapid expansion of digital journalism has transformed the production, distribution and consumption of news in Nigeria. It has also created new opportunities for cyberstalking, online harassment, threats, impersonation, fraud and the deliberate dissemination of harmful falsehoods. The State therefore has a legitimate interest in regulating serious forms of online harm. The difficulty arises where criminal regulation of digital communication overlaps with constitutionally protected freedom of expression and freedom of the press. This article examines section 24 of the Cybercrimes (Prohibition, Prevention, etc.) Act 2015 and its amendment in 2024, with particular attention to its implications for digital journalism and press freedom. It adopts a doctrinal legal research methodology, supported by a focused case study of section 24 and the principal judicial decisions concerning its validity and application. The analysis draws on Nigerian legislation, constitutional provisions, judicial decisions, regional and international human rights instruments, scholarly literature and documented enforcement practices. The article argues that the original section 24 was problematic because it combined serious forms of online harm with expressions such as “annoyance”, “insult”, “ill will” and “needless anxiety”, thereby creating considerable uncertainty about the boundary between criminal conduct and legitimate expression. The Court of Appeal in Okedara v Attorney General of the Federation upheld the provision, while the ECOWAS Court of Justice subsequently found that Nigeria’s maintenance of the original provision violated its international human rights obligations and directed Nigeria to amend or repeal it. The 2024 amendment substantially narrowed subsection 24(1) by removing several subjective expressions and concentrating liability on pornographic content and knowingly false communications intended to cause a breakdown of law and order or pose a threat to life. Questions concerning interpretation, enforcement and adequate protection for public-interest journalism nonetheless remain. The article concludes that the legitimacy of section 24 cannot be assessed solely by reference to the wording of the statute; its constitutional and human rights acceptability also depends on how the provision is interpreted and enforced. The article accordingly advocates a restrained, rights-sensitive approach grounded in legality, legitimate aim, necessity, proportionality and the protection of bona fide public-interest journalism.',
    'Cybercrime, digital journalism, freedom of expression, press freedom, section 24, Cybercrimes Act, Nigeria, online speech',
    '28-40',
    [
-    ['Edetalehn Oaihimire Idemudia','Faculty of Law, Edo State University, Iyamho, Nigeria'],
+    ['Idemudia Edetalehn OAIHIMIRE','Faculty of Law, Edo State University, Iyamho, Nigeria'],
     ['Wilfred Oritsesan Olley','Department of Mass Communication, Edo State University Iyamho, Nigeria','0000-0001-5405-765X','57862966200']
    ]
   ],
@@ -205,6 +205,7 @@ function seed_june_2026_issue(PDO $pdo): void {
    foreach($structured as $i=>$au)$ins->execute([$sid,$i+1,$au[0],$au[1],$au[2]??null,$au[3]??null]);
   }
  }
+ $pdo->prepare("UPDATE submission_authors sa JOIN submissions s ON s.id=sa.submission_id SET sa.name='Idemudia Edetalehn OAIHIMIRE', sa.orcid='0009-0007-1507-2815' WHERE s.title='Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act' AND sa.sort_order=1")->execute();
  $pdo->exec("UPDATE submission_authors SET orcid='0000-0001-5405-765X',scopus_id='57862966200' WHERE name='Wilfred Oritsesan Olley'");
 }
 function seed_june_2026_galleys(PDO $pdo): void {
