@@ -69,6 +69,7 @@ if($page==='galley'){
  $name=basename($_GET['file']??'');
  if(!preg_match('/^na-\d+-[a-f0-9]{24}\.pdf$/',$name)){http_response_code(404);exit('Not Found');}
  $full=__DIR__.'/storage/uploads/'.$name;
+ if(!is_file($full)&&!ensure_june_2026_pdf_file($name)){http_response_code(404);exit('Not Found');}
  if(!is_file($full)){http_response_code(404);exit('Not Found');}
  header('Content-Type: application/pdf');
  header('Content-Length: '.filesize($full));
