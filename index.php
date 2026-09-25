@@ -64,6 +64,19 @@ function public_sidebar(string $url='',string $title='',string $pdf=''): string 
  return $out;
 }
 $page=$_GET['page']??'home';
+/* Early binary galley response: must run before any HTML output. */
+if($page==='galley'){
+ $name=basename($_GET['file']??'');
+ if(!preg_match('/^na-\d+-[a-f0-9]{24}\.pdf$/',$name)){http_response_code(404);exit('Not Found');}
+ $full=__DIR__.'/storage/uploads/'.$name;
+ if(!is_file($full)){http_response_code(404);exit('Not Found');}
+ header('Content-Type: application/pdf');
+ header('Content-Length: '.filesize($full));
+ header('Content-Disposition: inline; filename="'.$name.'"');
+ header('X-Content-Type-Options: nosniff');
+ readfile($full);
+ exit;
+}
 $msg='';
 if($page==='logout'){session_destroy();header('Location: ./');exit;}
 if($_SERVER['REQUEST_METHOD']==='POST'){
@@ -276,7 +289,6 @@ if(in_array($page,$protectedPages,true)&&!$u){header('Location: ?page=login');ex
 <p>Dr. Wilfred O. Olley <span>(Associate Professor, Edo State University, Iyamho)</span></p>
 <p>Rev. Fr. Dr. Peter E. Egielewa <span>(Associate Professor, Edo State University, Iyamho)</span></p>
 </main>
-<?php elseif($page==='galley'): $name=basename($_GET['file']??'');if(!preg_match('/^na-\\d+-[a-f0-9]{24}\\.pdf$/',$name)){http_response_code(404);exit('Not Found');}$full=__DIR__.'/storage/uploads/'.$name;if(!is_file($full)){http_response_code(404);exit('Not Found');}header('Content-Type: application/pdf');header('Content-Length: '.filesize($full));header('Content-Disposition: inline; filename="'.$name.'"');readfile($full);exit; ?>
 <?php elseif($page==='admin-overview'): $admin=require_login();if(!(has_role($admin,'Editor')||has_role($admin,'Journal Manager')||has_role($admin,'Site Administrator'))){http_response_code(403);exit('Access denied');}$cq=db()->prepare("SELECT COUNT(*) FROM submissions s JOIN submission_editors se ON se.submission_id=s.id WHERE se.editor_id=? AND s.status NOT IN ('Published','Declined')");$cq->execute([$admin['id']]);$my=(int)$cq->fetchColumn();$un=(int)db()->query("SELECT COUNT(*) FROM submissions s WHERE s.status NOT IN ('Published','Declined') AND NOT EXISTS(SELECT 1 FROM submission_editors se WHERE se.submission_id=s.id)")->fetchColumn();$act=(int)db()->query("SELECT COUNT(*) FROM submissions WHERE status NOT IN ('Published','Declined')")->fetchColumn();$arc=(int)db()->query("SELECT COUNT(*) FROM submissions WHERE status IN ('Published','Declined')")->fetchColumn(); ?>
 <h1>Overview</h1><div class="ojs35-tabs"><a class="on" href="?page=editor-submissions&queue=my">My Queue (<?=$my?>)</a><a href="?page=editor-submissions&queue=unassigned">Unassigned (<?=$un?>)</a><a href="?page=editor-submissions&queue=active">All Active (<?=$act?>)</a><a href="?page=editor-submissions&queue=archives">Archives (<?=$arc?>)</a></div><div class="ojs35-panel"><h3>Editorial Tasks</h3><p>Use the submission queues to manage manuscripts through Submission, Review, Copyediting and Production.</p><a class="button" href="?page=editor-submissions&queue=my">Open My Queue</a></div><?php elseif($page==='users-roles'): $admin=require_login();if(!(has_role($admin,'Journal Manager')||has_role($admin,'Site Administrator'))){http_response_code(403);exit('Access denied');}$users=db()->query('SELECT * FROM users ORDER BY created_at DESC')->fetchAll(); ?>
 <main class="wide content"><h2>Users & Roles</h2><?php foreach($users as $usr): ?><div class="paper"><strong><?=e($usr['given_name'].' '.$usr['family_name'])?></strong> · <?=e($usr['email'])?><br>Verified: <?=((int)$usr['verified']?'Yes':'No')?> · Roles: <?=e($usr['roles'])?><form method="post"><input type="hidden" name="csrf" value="<?=csrf()?>"><input type="hidden" name="action" value="update-user-role"><input type="hidden" name="user_id" value="<?=(int)$usr['id']?>"><?php foreach(['Reader','Author','Reviewer','Editor','Journal Manager'] as $role): ?><label><input type="checkbox" name="roles[]" value="<?=e($role)?>" <?=has_role($usr,$role)?'checked':''?>> <?=e($role)?></label><?php endforeach; ?><button>Save Roles</button></form><form method="post"><input type="hidden" name="csrf" value="<?=csrf()?>"><input type="hidden" name="action" value="set-user-verification"><input type="hidden" name="user_id" value="<?=(int)$usr['id']?>"><input type="hidden" name="verified" value="<?=((int)$usr['verified']?0:1)?>"><button><?=((int)$usr['verified']?'Mark Unverified':'Verify User')?></button></form></div><?php endforeach; ?></main>
