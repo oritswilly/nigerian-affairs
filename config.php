@@ -199,6 +199,18 @@ function seed_june_2026_issue(PDO $pdo): void {
     ['Clement Michael Inobeme','Department of English and Literary Studies, University of Ilorin']
    ]
   ]
+  ,[
+   'Electoral Cycles and Security Neglect: Budget Allocation in Nigeria, 2015-2025',
+   'Valentine Ayokhaude Gabriel; Richard Oklagba Akoji; Obiageri Angelina Odife',
+   'This study examines the nexus between electoral cycles, security budget allocation, and security neglect in Nigeria between 2015 and 2025. Anchored in Political Budget Cycle Theory, Institutional Theory, and the Human Security framework, the study examines the extent to which security expenditure is politicised around the 2015, 2019, and 2023 general elections and the implications of such fiscal patterns for sustainable security outcomes. Adopting a qualitative documentary research design, it analyses secondary data from Appropriation Acts, Budget Office reports, INEC documents, academic studies, and policy reports. Content, thematic, and comparative analyses were employed to compare election and non-election years. Findings show substantial increases in security expenditure and deployment during election periods, but persistent terrorism, banditry, kidnapping, communal conflict, and electoral violence indicate limited sustainable improvements. The study finds qualified support for the Political Budget Cycle, noting both electoral influences and legitimate security needs. Weak implementation, accountability, institutional capacity, planning, oversight, and politicisation constrained effectiveness. It recommends long-term budgeting, implementation and accountability, professionalisation and depoliticisation, human-security priorities, and sustained electoral-security investments.',
+   'Political Budget Cycle; Security Budget Allocation; Electoral Cycles; Security Neglect; Nigeria',
+   '69-80',
+   [
+    ['Valentine Ayokhaude Gabriel','Department of Political Science and Public Administration, Edo State University, Iyamho'],
+    ['Richard Oklagba Akoji','Department of Political Science, Southwestern University, Okun-Owa, Ogun State'],
+    ['Obiageri Angelina Odife','Department of Political Science and Public Administration, Edo State University, Iyamho']
+   ]
+  ]
  ];
  foreach($articles as $idx=>[$title,$authors,$abstract,$keywords,$pages,$structured]){
   $q=$pdo->prepare('SELECT id FROM submissions WHERE title=? LIMIT 1');$q->execute([$title]);$sid=(int)($q->fetchColumn()?:0);
@@ -229,6 +241,7 @@ function seed_june_2026_galleys(PDO $pdo): void {
   ['Music Education as a Gateway to Entrepreneurship and Economic Growth in Nigeria: A Qualitative Synthesis of Secondary Evidence','na-4-794d942ed538edc985f4ba2b.pdf','794d942ed538edc985f4ba2b85d314d2300f57dfa4ee29020e63679c62a935ca'],
   ['An Appraisal of Struggle for Power in the Damaturu Area of Borno: A Case of Competition Between Kanuri and Fulani Groups Over Political Offices in the Pre-colonial Period up to 1960','na-5-2b831478336108d42cf3da6a.pdf','2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36'],
   ['Mother as a Superhero in Buchi Emecheta’s The Joys of Motherhood','na-6-17986a73ab8ec8f015e4ba46.pdf','17986a73ab8ec8f015e4ba46ce2d2b79be34fc6f89e716e84acdf307c4a9d5c4']
+  ,['Electoral Cycles and Security Neglect: Budget Allocation in Nigeria, 2015-2025','na-7-0d5796d8e885a773a2a90266.pdf','0d5796d8e885a773a2a902668aa3433f3e4ed56a56321ddc9056f861b3325de7']
  ];
  foreach($items as [$title,$name,$sha]){
   $q=$pdo->prepare("SELECT s.id FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.title=? AND s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)' LIMIT 1");
