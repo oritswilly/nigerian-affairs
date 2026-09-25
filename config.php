@@ -29,7 +29,7 @@ function seed_home_announcements(PDO $pdo): void {
  $pdo->exec("DELETE FROM announcements WHERE title IN ('Volume 1, Number 1 (2025) published online','Volume 2, Number 2 (2026) published online')");
  $items=[
   ['Complete Nigerian Affairs digital archive is now available','Volume 1, Number 1 (2025) has moved to the archives and remains available for browsing by issue, article and keyword.','2026-09-24 21:58:02'],
-  ['Volume 1, Number 2 (2026) published online','The June 2026 current issue contains 5 peer-reviewed articles in communication, journalism, music education and Nigerian history.','2026-09-24 21:58:01']
+  ['Volume 1, Number 2 (2026) published online','The June 2026 current issue contains 6 peer-reviewed articles in communication, journalism, music education and Nigerian history.','2026-09-24 21:58:01']
  ];
  foreach($items as [$title,$body,$date]){
   $q=$pdo->prepare('SELECT id FROM announcements WHERE title=? ORDER BY id LIMIT 1');$q->execute([$title]);$id=(int)($q->fetchColumn()?:0);
@@ -157,12 +157,12 @@ function seed_june_2026_issue(PDO $pdo): void {
   ],
   [
    'Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act',
-   'Idemudia Edetalehn OAIHIMIRE; Wilfred Oritsesan Olley',
+   'Idemudia Edetalehn Oaihimire; Wilfred Oritsesan Olley',
    'The rapid expansion of digital journalism has transformed the production, distribution and consumption of news in Nigeria. It has also created new opportunities for cyberstalking, online harassment, threats, impersonation, fraud and the deliberate dissemination of harmful falsehoods. The State therefore has a legitimate interest in regulating serious forms of online harm. The difficulty arises where criminal regulation of digital communication overlaps with constitutionally protected freedom of expression and freedom of the press. This article examines section 24 of the Cybercrimes (Prohibition, Prevention, etc.) Act 2015 and its amendment in 2024, with particular attention to its implications for digital journalism and press freedom. It adopts a doctrinal legal research methodology, supported by a focused case study of section 24 and the principal judicial decisions concerning its validity and application. The analysis draws on Nigerian legislation, constitutional provisions, judicial decisions, regional and international human rights instruments, scholarly literature and documented enforcement practices. The article argues that the original section 24 was problematic because it combined serious forms of online harm with expressions such as “annoyance”, “insult”, “ill will” and “needless anxiety”, thereby creating considerable uncertainty about the boundary between criminal conduct and legitimate expression. The Court of Appeal in Okedara v Attorney General of the Federation upheld the provision, while the ECOWAS Court of Justice subsequently found that Nigeria’s maintenance of the original provision violated its international human rights obligations and directed Nigeria to amend or repeal it. The 2024 amendment substantially narrowed subsection 24(1) by removing several subjective expressions and concentrating liability on pornographic content and knowingly false communications intended to cause a breakdown of law and order or pose a threat to life. Questions concerning interpretation, enforcement and adequate protection for public-interest journalism nonetheless remain. The article concludes that the legitimacy of section 24 cannot be assessed solely by reference to the wording of the statute; its constitutional and human rights acceptability also depends on how the provision is interpreted and enforced. The article accordingly advocates a restrained, rights-sensitive approach grounded in legality, legitimate aim, necessity, proportionality and the protection of bona fide public-interest journalism.',
    'Cybercrime, digital journalism, freedom of expression, press freedom, section 24, Cybercrimes Act, Nigeria, online speech',
    '28-40',
    [
-    ['Idemudia Edetalehn OAIHIMIRE','Faculty of Law, Edo State University, Iyamho, Nigeria'],
+    ['Idemudia Edetalehn Oaihimire','Faculty of Law, Edo State University, Iyamho, Nigeria'],
     ['Wilfred Oritsesan Olley','Department of Mass Communication, Edo State University Iyamho, Nigeria','0000-0001-5405-765X','57862966200']
    ]
   ],
@@ -186,6 +186,18 @@ function seed_june_2026_issue(PDO $pdo): void {
     ['Abubakar Umar','Department of History and International Studies, Yobe State University, Damaturu, Yobe State'],
     ['Umar Inuwa Musa','Department of History and International Studies, Yobe State University, Damaturu, Yobe State']
    ]
+  ],
+  [
+   'Mother as a Superhero in Buchi Emecheta’s The Joys of Motherhood',
+   'Irene Ejehiokhin Akhideno; Solomon Awuzie; Clement Michael Inobeme',
+   'This article argues that Buchi Emecheta’s The Joys of Motherhood engages with mothers’ experiences in Africa. It reveals that a mother in Africa is always a victim of constant abuse, violence and neglect, despite her commitment to her family. Using Nnu Ego, the protagonist of the novel, as an example of a committed mother, the article engages with the sacrifices of mothers in families. It also shows how much suffering, abuse and violence a mother endures to hold on to the image of her undying love for her family. This article portrays a mother, such as Nnu Ego, who continues to endure an abusive marriage because of her irresponsible children, as a superhero, contrary to popular chauvinistic postulations that portray such a stay as a weakness. Even though this article adopts feminism as the literary theory to better understand this discourse on motherism, Buchi Emecheta\'s The Joys of Motherhood can be referred to as one of the canonical texts often deployed to better understand discourses on African feminism, where womanism and motherism are strongly featured as feminist ideologies. It uses the novel as a tool to emphasise the writer’s perception of mothers’ committed lifestyles and the patriarchal stereotypes that constantly try to pull them down. This article concludes that The Joys of Motherhood is a novel that is about how a mother, Nnu Ego, is able to recreate her personal life experience, which is characterised by tales of suffering, abuse and violence, for the benefit of her family.',
+   'Mother, Feminism, Violence against women, Patriarchal Stereotype',
+   '60-68',
+   [
+    ['Irene Ejehiokhin Akhideno','Department of English, Edo State University, Iyamho'],
+    ['Solomon Awuzie','Department of English, Edo State University, Iyamho'],
+    ['Clement Michael Inobeme','Department of English and Literary Studies, University of Ilorin']
+   ]
   ]
  ];
  foreach($articles as $idx=>[$title,$authors,$abstract,$keywords,$pages,$structured]){
@@ -205,7 +217,7 @@ function seed_june_2026_issue(PDO $pdo): void {
    foreach($structured as $i=>$au)$ins->execute([$sid,$i+1,$au[0],$au[1],$au[2]??null,$au[3]??null]);
   }
  }
- $pdo->prepare("UPDATE submission_authors sa JOIN submissions s ON s.id=sa.submission_id SET sa.name='Idemudia Edetalehn OAIHIMIRE', sa.orcid='0009-0007-1507-2815' WHERE s.title='Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act' AND sa.sort_order=1")->execute();
+ $pdo->prepare("UPDATE submission_authors sa JOIN submissions s ON s.id=sa.submission_id SET sa.name='Idemudia Edetalehn Oaihimire', sa.orcid='0009-0007-1507-2815' WHERE s.title='Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act' AND sa.sort_order=1")->execute();
  $pdo->exec("UPDATE submission_authors SET orcid='0000-0001-5405-765X',scopus_id='57862966200' WHERE name='Wilfred Oritsesan Olley'");
 }
 function seed_june_2026_galleys(PDO $pdo): void {
@@ -213,9 +225,10 @@ function seed_june_2026_galleys(PDO $pdo): void {
  $items=[
   ['Effectiveness of Broadcast Media in Promoting Skill Acquisition Awareness Among Mass Communication Students at Auchi Polytechnic','na-1-8a6efc3695bdd66a89f064ab.pdf','8a6efc3695bdd66a89f064abddaace4db3f4edf07779278111c16fd0ab63738a'],
   ['Audience Awareness and Perception of Femicide Reporting among Trinity University Undergraduates','na-2-aed91195bf0e5dd3d805273d.pdf','aed91195bf0e5dd3d805273d97a47fc84312b98f94da089135b78534cf43066a'],
-  ['Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act','na-3-5e43b37f2054abc5a6921e1b.pdf','5e43b37f2054abc5a6921e1bb3c7d239ee77e0cf901436c81d786b7dd44712dc'],
+  ['Cybercrime Law, Digital Journalism and Press Freedom in Nigeria: A Legal Appraisal of Section 24 of the Cybercrimes Act','na-3-86e434284a896d3305cb20d2.pdf','86e434284a896d3305cb20d23bf0690e88a9b690378dee140db079c7046af89c'],
   ['Music Education as a Gateway to Entrepreneurship and Economic Growth in Nigeria: A Qualitative Synthesis of Secondary Evidence','na-4-794d942ed538edc985f4ba2b.pdf','794d942ed538edc985f4ba2b85d314d2300f57dfa4ee29020e63679c62a935ca'],
-  ['An Appraisal of Struggle for Power in the Damaturu Area of Borno: A Case of Competition Between Kanuri and Fulani Groups Over Political Offices in the Pre-colonial Period up to 1960','na-5-2b831478336108d42cf3da6a.pdf','2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36']
+  ['An Appraisal of Struggle for Power in the Damaturu Area of Borno: A Case of Competition Between Kanuri and Fulani Groups Over Political Offices in the Pre-colonial Period up to 1960','na-5-2b831478336108d42cf3da6a.pdf','2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36'],
+  ['Mother as a Superhero in Buchi Emecheta’s The Joys of Motherhood','na-6-17986a73ab8ec8f015e4ba46.pdf','17986a73ab8ec8f015e4ba46ce2d2b79be34fc6f89e716e84acdf307c4a9d5c4']
  ];
  foreach($items as [$title,$name,$sha]){
   $q=$pdo->prepare("SELECT s.id FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.title=? AND s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)' LIMIT 1");
