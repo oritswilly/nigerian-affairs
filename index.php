@@ -68,6 +68,7 @@ $page=$_GET['page']??'home';
 if($page==='galley'){
  $name=basename($_GET['file']??'');
  if(!preg_match('/^na-\d+-[a-f0-9]{24}\.pdf$/',$name)){http_response_code(404);exit('Not Found');}
+ if(in_array($name,['na-3-5e43b37f2054abc5a6921e1b.pdf','na-3-ab8ec0e7954b745047a9c670.pdf','na-3-86e434284a896d3305cb20d2.pdf'],true)){http_response_code(404);exit('Not Found');}
  $storageDir=__DIR__.'/storage/uploads';
  $storage=$storageDir.'/'.$name;
  $bundled=__DIR__.'/seed_galleys/'.$name;
