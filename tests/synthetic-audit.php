@@ -31,38 +31,41 @@ try {
  $q=$pdo->query("SELECT COUNT(*) FROM issues WHERE volume=1 AND number=2 AND year=2026 AND status='Published' AND published_at='2026-06-01 00:00:00'");
  must((int)$q->fetchColumn()===1,'Volume 1 No. 2 (2026) issue metadata is missing');
  $q=$pdo->query("SELECT COUNT(*) FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)'");
- must((int)$q->fetchColumn()===5,'Volume 1 No. 2 (2026) must contain exactly 5 published articles');
+ must((int)$q->fetchColumn()===6,'Volume 1 No. 2 (2026) must contain exactly 6 published articles');
  $q=$pdo->query("SELECT GROUP_CONCAT(p.pages ORDER BY CAST(SUBSTRING_INDEX(p.pages,'-',1) AS UNSIGNED) SEPARATOR ',') FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)'");
- must((string)$q->fetchColumn()==='1-14,15-27,28-40,41-49,50-59','June 2026 page ranges are incorrect');
+ must((string)$q->fetchColumn()==='1-14,15-27,28-40,41-49,50-59,60-68','June 2026 page ranges are incorrect');
  $q=$pdo->query("SELECT COUNT(*) FROM submission_authors sa JOIN submissions s ON s.id=sa.submission_id JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)'");
- must((int)$q->fetchColumn()===11,'June 2026 structured author metadata must contain 11 author records');
- pass('june_2026_issue','5 published articles, pages 1-59 and 11 structured author records');
+ must((int)$q->fetchColumn()===14,'June 2026 structured author metadata must contain 14 author records');
+ pass('june_2026_issue','6 published articles, pages 1-68 and 14 structured author records');
 
  $q=$pdo->query("SELECT COUNT(*) FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)' AND CHAR_LENGTH(s.abstract)>=800");
- must((int)$q->fetchColumn()===5,'All five June 2026 articles must contain their full published abstracts');
- pass('june_2026_full_abstracts','all 5 published abstracts are complete');
+ must((int)$q->fetchColumn()===6,'All six June 2026 articles must contain their full published abstracts');
+ pass('june_2026_full_abstracts','all 6 published abstracts are complete');
 
  $q=$pdo->query("SELECT COUNT(*) FROM galleys g JOIN submissions s ON s.id=g.submission_id JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)' AND g.mime_type='application/pdf' AND g.file_path LIKE '?page=galley&file=na-%'");
- must((int)$q->fetchColumn()===5,'All five June 2026 articles must have linked PDF galley records');
- pass('june_2026_galleys','all 5 current-issue articles have PDF galley records');
+ must((int)$q->fetchColumn()===6,'All six June 2026 articles must have linked PDF galley records');
+ pass('june_2026_galleys','all 6 current-issue articles have PDF galley records');
 
  $galleyHashes=[
   'na-1-8a6efc3695bdd66a89f064ab.pdf'=>'8a6efc3695bdd66a89f064abddaace4db3f4edf07779278111c16fd0ab63738a',
   'na-2-aed91195bf0e5dd3d805273d.pdf'=>'aed91195bf0e5dd3d805273d97a47fc84312b98f94da089135b78534cf43066a',
-  'na-3-5e43b37f2054abc5a6921e1b.pdf'=>'5e43b37f2054abc5a6921e1bb3c7d239ee77e0cf901436c81d786b7dd44712dc',
+  'na-3-86e434284a896d3305cb20d2.pdf'=>'86e434284a896d3305cb20d23bf0690e88a9b690378dee140db079c7046af89c',
   'na-4-794d942ed538edc985f4ba2b.pdf'=>'794d942ed538edc985f4ba2b85d314d2300f57dfa4ee29020e63679c62a935ca',
-  'na-5-2b831478336108d42cf3da6a.pdf'=>'2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36'
+  'na-5-2b831478336108d42cf3da6a.pdf'=>'2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36',
+  'na-6-17986a73ab8ec8f015e4ba46.pdf'=>'17986a73ab8ec8f015e4ba46ce2d2b79be34fc6f89e716e84acdf307c4a9d5c4'
  ];
  foreach($galleyHashes as $file=>$sha){
   $path=__DIR__.'/../seed_galleys/'.$file;
   must(is_file($path),'Bundled galley file missing: '.$file);
   must(hash_file('sha256',$path)===$sha,'Bundled galley checksum mismatch: '.$file);
  }
- pass('bundled_june_2026_galleys','all 5 exact PDFs present with verified SHA-256 checksums');
+ pass('bundled_june_2026_galleys','all 6 exact PDFs present with verified SHA-256 checksums');
 
  $q=$pdo->query("SELECT COUNT(*) FROM submission_authors WHERE name='Wilfred Oritsesan Olley' AND orcid='0000-0001-5405-765X' AND scopus_id='57862966200'");
  must((int)$q->fetchColumn()>=1,'Wilfred Oritsesan Olley ORCID/Scopus metadata is incorrect');
  pass('wilfred_identifiers','ORCID 0000-0001-5405-765X and Scopus ID 57862966200');
+ $q=$pdo->query("SELECT COUNT(*) FROM submission_authors WHERE name='Idemudia Edetalehn Oaihimire' AND orcid='0009-0007-1507-2815'");
+ must((int)$q->fetchColumn()===1,'Corrected Idemudia author name or ORCID is missing');
 
  $verifiedIds=[
   'Peter Eshioke Egielewa'=>'0000-0002-3670-2835',
