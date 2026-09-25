@@ -112,7 +112,7 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
 }
 .keyword-cloud a.kw:hover,
 .keyword-cloud a.kw:focus{
-  text-decoration:underline!important;
+  text-decoration:none!important;
   filter:brightness(.72)!important;
   z-index:3!important;
   outline:none!important;
@@ -226,7 +226,7 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
   text-decoration:none!important;
 }
 .njcr-home .announce .read-more:hover,
-.njcr-home .announce .announcement-title:hover{text-decoration:underline!important}
+.njcr-home .announce .announcement-title:hover{text-decoration:none!important}
 @media(max-width:800px){
  .njcr-home .announce{grid-template-columns:1fr!important}
  .njcr-home .announce article{padding:0 0 16px!important;min-height:0!important}
@@ -248,7 +248,7 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
 .article-shell-ojs{min-width:0;border:0;padding:0!important}
 .article-head-ojs{padding:27px 30px 24px;background:#fff}
 .article-breadcrumbs-ojs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 24px;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:1.4;color:#0073a8}
-.article-breadcrumbs-ojs a{color:#0073a8;text-decoration:none}.article-breadcrumbs-ojs a:hover{text-decoration:underline}
+.article-breadcrumbs-ojs a{color:#0073a8;text-decoration:none}.article-breadcrumbs-ojs a:hover{text-decoration:none}
 .article-breadcrumbs-ojs span{color:#60747f}
 .article-head-ojs h1{margin:0;max-width:770px;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:1.17;font-weight:700;color:#0a0a0a;letter-spacing:0}
 .article-grid-ojs{display:grid;grid-template-columns:minmax(0,1fr) 285px;border-top:1px solid #d8dfe2}
@@ -273,7 +273,7 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
 .article-meta-value-ojs{color:#111;font-size:10px;line-height:1.5}
 .article-citation-ojs{margin:0 0 12px;font-size:8.7px;line-height:1.75;color:#222}
 .article-meta-link-ojs{display:block!important;margin:0!important;color:#0073a8!important;font-size:10px;line-height:1.55;text-decoration:none!important}
-.article-meta-link-ojs:hover{text-decoration:underline!important}
+.article-meta-link-ojs:hover{text-decoration:none!important}
 .citation-more-ojs{margin-top:7px}
 .citation-more-ojs summary{list-style:none;cursor:pointer;background:#d6d6d6;color:#626d73;padding:5px 9px;font-size:9px;line-height:1.3;border-radius:2px}
 .citation-more-ojs summary::-webkit-details-marker{display:none}.citation-more-ojs summary:after{content:"▾";float:right}
@@ -333,7 +333,7 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
   line-height:1.25!important;
   text-decoration:none!important;
 }
-.citation-style-menu-ojs>a:not(.citation-download-link-ojs):hover{text-decoration:underline!important}
+.citation-style-menu-ojs>a:not(.citation-download-link-ojs):hover{text-decoration:none!important}
 .citation-style-menu-ojs h4{
   margin:18px 0 8px!important;
   padding:0!important;
@@ -357,7 +357,7 @@ footer{padding:34px 0 14px}.footer-grid{grid-template-columns:1.35fr 1fr 1fr 1fr
   text-decoration:none!important;
 }
 .citation-download-link-ojs span{font-size:13px;line-height:1;color:#0073a8}
-.citation-download-link-ojs:hover{text-decoration:underline!important}
+.citation-download-link-ojs:hover{text-decoration:none!important}
 
 /* OJS 3.5 public typography normalization — 14px baseline */
 :root{
@@ -627,3 +627,6 @@ body{color:#222!important}
 /* Official CC BY 4.0 badge accompanies licensed article content and policy text. */
 .cc-by-badge{display:inline-block!important;margin-top:9px!important;line-height:0!important;text-decoration:none!important}
 .cc-by-badge img{display:block;width:88px;height:31px;object-fit:contain}
+
+/* Links remain undecorated in every interaction state across public and admin pages. */
+a, a:link, a:visited, a:hover, a:focus, a:focus-visible, a:active{ text-decoration:none!important; text-decoration-line:none!important; }
