@@ -1,0 +1,34 @@
+name: Bundle NA June 2026 galleys
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/bundle-na-galleys.yml']
+permissions:
+  contents: write
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify exact galleys
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/galleys
+          curl -fL --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-5e84-820e-b6f4-383d9d12e84c/raw?se=2026-09-25T09%3A51%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=8d124776-b78f-5fd7-9971-1488e3846950&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T06%3A43%3A36Z&ske=2026-09-26T06%3A43%3A36Z&sks=b&skv=2026-02-06&sig=mNzw9tHGCJzN0lo7DCo14G6STZmULN1Fs49I9tRtixo%3D' -o assets/galleys/na-1-8a6efc3695bdd66a89f064ab.pdf
+          curl -fL --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-b38c-820e-98ad-2e172488e4a2/raw?se=2026-09-25T09%3A51%3A24Z&sp=r&sv=2026-02-06&sr=b&scid=d0416901-20ce-5ac1-89c8-1aa3ea79dd60&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T09%3A39%3A08Z&ske=2026-09-26T09%3A39%3A08Z&sks=b&skv=2026-02-06&sig=FVjbGZJFMfKxI7213sYA5C057Ex5K/OYgLcI/oahwEQ%3D' -o assets/galleys/na-2-aed91195bf0e5dd3d805273d.pdf
+          curl -fL --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-0ad4-820e-b29a-42e96b42a71e/raw?se=2026-09-25T09%3A51%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=14281a1d-d5a3-504c-a8d2-b6c7c9010884&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T05%3A55%3A08Z&ske=2026-09-26T05%3A55%3A08Z&sks=b&skv=2026-02-06&sig=WkBCY/%2B20g9w4SDPXKJSpyPjeM8gDQ0s6a8/Sd0TK4s%3D' -o assets/galleys/na-3-5e43b37f2054abc5a6921e1b.pdf
+          curl -fL --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-d49c-820e-87c1-0e866f10f2bf/raw?se=2026-09-25T09%3A51%3A22Z&sp=r&sv=2026-02-06&sr=b&scid=f712a736-4812-5d11-8d24-7ce253073724&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T09%3A30%3A12Z&ske=2026-09-26T09%3A30%3A12Z&sks=b&skv=2026-02-06&sig=LlUNedwvJ/1ab%2BgIej7bavrbjhA9z3Jp43N%2B4KX2pY8%3D' -o assets/galleys/na-4-794d942ed538edc985f4ba2b.pdf
+          curl -fL --retry 3 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-1df0-820e-ae5f-fc2b10d4af3a/raw?se=2026-09-25T09%3A51%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=4c4fe3af-f5f3-5f7c-8d27-2842b59a0be8&skoid=4a431cd2-eafd-49c7-90be-bbb4d45e696d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T09%3A15%3A18Z&ske=2026-09-26T09%3A15%3A18Z&sks=b&skv=2026-02-06&sig=waALOgXtsPAXUuHNtEiXd0SO2xUWQ/xUB49np2YJKSY%3D' -o assets/galleys/na-5-2b831478336108d42cf3da6a.pdf
+          echo '8a6efc3695bdd66a89f064abddaace4db3f4edf07779278111c16fd0ab63738a  assets/galleys/na-1-8a6efc3695bdd66a89f064ab.pdf' | sha256sum -c -
+          echo 'aed91195bf0e5dd3d805273d97a47fc84312b98f94da089135b78534cf43066a  assets/galleys/na-2-aed91195bf0e5dd3d805273d.pdf' | sha256sum -c -
+          echo '5e43b37f2054abc5a6921e1bb3c7d239ee77e0cf901436c81d786b7dd44712dc  assets/galleys/na-3-5e43b37f2054abc5a6921e1b.pdf' | sha256sum -c -
+          echo '794d942ed538edc985f4ba2b85d314d2300f57dfa4ee29020e63679c62a935ca  assets/galleys/na-4-794d942ed538edc985f4ba2b.pdf' | sha256sum -c -
+          echo '2b831478336108d42cf3da6ad3aa8717178ca7fde1d47ced1bf754b635649d36  assets/galleys/na-5-2b831478336108d42cf3da6a.pdf' | sha256sum -c -
+      - name: Commit bundled galleys
+        run: |
+          git config user.name "NA Galley Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/galleys
+          git commit -m "Bundle verified Volume 1 Issue 2 PDF galleys"
+          git push
