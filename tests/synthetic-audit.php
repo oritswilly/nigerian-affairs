@@ -28,6 +28,26 @@ try {
  must($knownArticles===7&&$knownAuthors===17,'Inaugural structured metadata totals are incomplete');
  pass('inaugural_metadata','7 published articles and 17 structured author records');
 
+ $inauguralGalleys=[
+  'na-101-c12608cbc714868ed461ed52.pdf'=>'c12608cbc714868ed461ed52bdb101080c9a195a29319503facc6358769421ae',
+  'na-102-c3f8bb9be1e13c8c73b01337.pdf'=>'c3f8bb9be1e13c8c73b01337a2f77b74f0ef26ce452965f15894ca500780c5ff',
+  'na-103-8015a1fa5fe766f23b2425ef.pdf'=>'8015a1fa5fe766f23b2425eff249cfd49e9cae29db4635c46e537c0a02daf173',
+  'na-104-e72cb26801d6e27697336be4.pdf'=>'e72cb26801d6e27697336be405f81b8cabefb178a3f55f353ba06bd8262b2693',
+  'na-105-7d701004c620ee393fcadc4c.pdf'=>'7d701004c620ee393fcadc4c4d6dbd968e38181cfad9446cfea1ff3f4625a86e',
+  'na-106-68c07aafb8fbb52bb304ceff.pdf'=>'68c07aafb8fbb52bb304ceff9e7031b0b9deda78caae082695538cdb17c1477c',
+  'na-107-807dcd8fb090caffbb02677b.pdf'=>'807dcd8fb090caffbb02677be85e0ba198250336a8891d181a5d91225f0dd2df'
+ ];
+ foreach($inauguralGalleys as $file=>$sha){
+  $path=__DIR__.'/../seed_galleys/'.$file;
+  must(is_file($path),'Inaugural PDF missing: '.$file);
+  must(hash_file('sha256',$path)===$sha,'Inaugural PDF checksum mismatch: '.$file);
+  $q=$pdo->prepare("SELECT COUNT(*) FROM galleys g JOIN submissions s ON s.id=g.submission_id JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 1 (2025)' AND g.file_path=? AND g.mime_type='application/pdf'");
+  $q->execute(['?page=galley&file='.$file]);
+  must((int)$q->fetchColumn()===1,'Inaugural PDF link missing: '.$file);
+ }
+ pass('inaugural_galleys','all 7 exact PDFs linked to published articles with verified SHA-256 checksums');
+
+
  $q=$pdo->query("SELECT COUNT(*) FROM issues WHERE volume=1 AND number=2 AND year=2026 AND status='Published' AND published_at='2026-06-01 00:00:00'");
  must((int)$q->fetchColumn()===1,'Volume 1 No. 2 (2026) issue metadata is missing');
  $q=$pdo->query("SELECT COUNT(*) FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.status='Published' AND p.issue_label='Vol. 1 No. 2 (2026)'");

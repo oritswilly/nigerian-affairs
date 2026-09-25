@@ -20,6 +20,7 @@ function db(): PDO {
  seed_home_announcements($pdo);
  seed_inaugural_issue($pdo);
  seed_inaugural_article_authors($pdo);
+ seed_inaugural_galleys($pdo);
  seed_june_2026_issue($pdo);
  seed_june_2026_galleys($pdo);
  seed_verified_author_ids($pdo);
@@ -119,6 +120,25 @@ function seed_inaugural_article_authors(PDO $pdo): void {
   $check=$pdo->prepare('SELECT COUNT(*) FROM submission_authors WHERE submission_id=?');$check->execute([$sid]);if((int)$check->fetchColumn()>0)continue;
   $ins=$pdo->prepare('INSERT INTO submission_authors(submission_id,sort_order,name,affiliation,orcid,scopus_id) VALUES(?,?,?,?,?,?)');
   foreach($authors as $i=>$a)$ins->execute([$sid,$i+1,$a[0],$a[1],$a[2]??null,$a[3]??null]);
+ }
+}
+function seed_inaugural_galleys(PDO $pdo): void {
+ $items=[
+  ['Teachers as Communicators of Ethical Values in Higher Education: An Evaluation of Lecturers’ Perspectives in Nigeria','na-101-c12608cbc714868ed461ed52.pdf','c12608cbc714868ed461ed52bdb101080c9a195a29319503facc6358769421ae'],
+  ['Christian Persecution in Nigeria: An Exegetical and Contextual Analysis of John 16:33','na-102-c3f8bb9be1e13c8c73b01337.pdf','c3f8bb9be1e13c8c73b01337a2f77b74f0ef26ce452965f15894ca500780c5ff'],
+  ['Media Campaigns as Determinants of Market Women’s Awareness and Compliance Towards COVID-19 Vaccination in Selected States in Southwest Nigeria','na-103-8015a1fa5fe766f23b2425ef.pdf','8015a1fa5fe766f23b2425eff249cfd49e9cae29db4635c46e537c0a02daf173'],
+  ['Preservation and Revitalisation of Nigerian Indigenous Languages Through Digital Media in South-West Nigeria','na-104-e72cb26801d6e27697336be4.pdf','e72cb26801d6e27697336be405f81b8cabefb178a3f55f353ba06bd8262b2693'],
+  ['Igbo-Language Radio Programmes as Tools for Indigenous Language Preservation in Enugu State','na-105-7d701004c620ee393fcadc4c.pdf','7d701004c620ee393fcadc4c4d6dbd968e38181cfad9446cfea1ff3f4625a86e'],
+  ['Deciphering the Cosmopolitan Characters of Some Selected Ilorin’s Compound Names: An Assessment of the Cultural and Linguistic Continuity, 1807-1900','na-106-68c07aafb8fbb52bb304ceff.pdf','68c07aafb8fbb52bb304ceff9e7031b0b9deda78caae082695538cdb17c1477c'],
+  ['The Politics and Evolution of the Nigeria Governors’ Forum (NGF) in the Fourth Republic: Issues and Controversies','na-107-807dcd8fb090caffbb02677b.pdf','807dcd8fb090caffbb02677be85e0ba198250336a8891d181a5d91225f0dd2df']
+ ];
+ $find=$pdo->prepare("SELECT s.id FROM submissions s JOIN production_items p ON p.submission_id=s.id WHERE s.title=? AND s.status='Published' AND p.issue_label='Vol. 1 No. 1 (2025)' LIMIT 1");
+ $existing=$pdo->prepare("SELECT COUNT(*) FROM galleys WHERE submission_id=? AND mime_type='application/pdf'");
+ $insert=$pdo->prepare("INSERT INTO galleys(submission_id,label,file_path,mime_type) VALUES(?,'PDF',?,'application/pdf')");
+ foreach($items as [$title,$name,$sha]){
+  $find->execute([$title]);$sid=(int)($find->fetchColumn()?:0);if(!$sid)continue;
+  $existing->execute([$sid]);if((int)$existing->fetchColumn()>0)continue;
+  $insert->execute([$sid,'?page=galley&file='.rawurlencode($name)]);
  }
 }
 function seed_june_2026_issue(PDO $pdo): void {
